@@ -3,6 +3,7 @@ import express from 'express';
 import { getNHLGames } from './lib/nhl.js';
 import { getHockeyTechGames } from './lib/hockeytech.js';
 import { getNCAAGames } from './lib/ncaa.js';
+import { getMLBGames, getMLBTeamMap } from './lib/mlb.js';
 import { allTeams, rememberTeam, persistTeams } from './lib/teams.js';
 import { fetchJSON } from './lib/http.js';
 import { cached } from './lib/cache.js';
@@ -12,6 +13,7 @@ const LEAGUE_LOADERS = {
   AHL: (s, e) => getHockeyTechGames('AHL', s, e),
   ECHL: (s, e) => getHockeyTechGames('ECHL', s, e),
   NCAA: (s, e) => getNCAAGames(s, e),
+  MLB: (s, e) => getMLBGames(s, e),
 };
 const ALL_LEAGUES = Object.keys(LEAGUE_LOADERS);
 
@@ -26,24 +28,29 @@ let warmed = false;
 export async function warmup() {
   if (warmed) return;
   warmed = true;
-  try {
-    const data = await cached('nhl:standings', 12 * 60 * 60 * 1000, () =>
-      fetchJSON('https://api-web.nhle.com/v1/standings/now')
-    );
-    for (const row of data?.standings || []) {
-      const abbrev = row.teamAbbrev?.default;
-      if (!abbrev) continue;
-      rememberTeam({
-        id: `NHL:${abbrev}`,
-        league: 'NHL',
-        name: row.teamName?.default || row.teamCommonName?.default || abbrev,
-        abbrev,
-      });
-    }
+  // Seed the full current rosters for leagues that have a clean team endpoint, so
+  // their checkboxes are populated before any month is browsed.
+  await Promise.allSettled([
+    (async () => {
+      const data = await cached('nhl:standings', 12 * 60 * 60 * 1000, () =>
+        fetchJSON('https://api-web.nhle.com/v1/standings/now')
+      );
+      for (const row of data?.standings || []) {
+        const abbrev = row.teamAbbrev?.default;
+        if (!abbrev) continue;
+        rememberTeam({
+          id: `NHL:${abbrev}`,
+          league: 'NHL',
+          name: row.teamName?.default || row.teamCommonName?.default || abbrev,
+          abbrev,
+        });
+      }
+    })(),
+    getMLBTeamMap(),
+  ]).then((results) => {
+    for (const r of results) if (r.status === 'rejected') console.error('seed failed:', r.reason?.message);
     persistTeams();
-  } catch (err) {
-    console.error('NHL seed failed:', err.message);
-  }
+  });
 }
 
 export function createApp() {

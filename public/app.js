@@ -1,5 +1,7 @@
-const LEAGUES = ['NHL', 'AHL', 'ECHL', 'NCAA'];
-const LEAGUE_COLOR = { NHL: 'var(--nhl)', AHL: 'var(--ahl)', ECHL: 'var(--echl)', NCAA: 'var(--ncaa)' };
+const LEAGUES = ['NHL', 'AHL', 'ECHL', 'NCAA', 'MLB'];
+const LEAGUE_COLOR = {
+  NHL: 'var(--nhl)', AHL: 'var(--ahl)', ECHL: 'var(--echl)', NCAA: 'var(--ncaa)', MLB: 'var(--mlb)',
+};
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MAX_CHIPS = 4;
@@ -11,7 +13,7 @@ const saved = JSON.parse(localStorage.getItem('hsc-state') || '{}');
 const state = {
   year: saved.year ?? null,
   month: saved.month ?? null, // 0-based
-  leaguesOn: { NHL: true, AHL: true, ECHL: true, NCAA: true, ...(saved.leaguesOn || {}) },
+  leaguesOn: { NHL: true, AHL: true, ECHL: true, NCAA: true, MLB: true, ...(saved.leaguesOn || {}) },
   teamsOff: new Set(saved.teamsOff || []), // team ids the user unchecked
   expanded: new Set(saved.expanded || []),
   // Roadtrip: full game objects keyed by id, so a selected game survives navigating

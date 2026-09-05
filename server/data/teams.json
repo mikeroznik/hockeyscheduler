@@ -336,18 +336,6 @@
     "abbrev": "SC"
   },
   {
-    "id": "ECHL:STAR",
-    "league": "ECHL",
-    "name": "Stars",
-    "abbrev": "STAR"
-  },
-  {
-    "id": "ECHL:STPE",
-    "league": "ECHL",
-    "name": "Stripes",
-    "abbrev": "STPE"
-  },
-  {
     "id": "ECHL:TAH",
     "league": "ECHL",
     "name": "Tahoe Knight Monsters",
@@ -400,6 +388,186 @@
     "league": "ECHL",
     "name": "Worcester Railers",
     "abbrev": "WOR"
+  },
+  {
+    "id": "MLB:AZ",
+    "league": "MLB",
+    "name": "Arizona Diamondbacks",
+    "abbrev": "AZ"
+  },
+  {
+    "id": "MLB:ATH",
+    "league": "MLB",
+    "name": "Athletics",
+    "abbrev": "ATH"
+  },
+  {
+    "id": "MLB:ATL",
+    "league": "MLB",
+    "name": "Atlanta Braves",
+    "abbrev": "ATL"
+  },
+  {
+    "id": "MLB:BAL",
+    "league": "MLB",
+    "name": "Baltimore Orioles",
+    "abbrev": "BAL"
+  },
+  {
+    "id": "MLB:BOS",
+    "league": "MLB",
+    "name": "Boston Red Sox",
+    "abbrev": "BOS"
+  },
+  {
+    "id": "MLB:CHC",
+    "league": "MLB",
+    "name": "Chicago Cubs",
+    "abbrev": "CHC"
+  },
+  {
+    "id": "MLB:CWS",
+    "league": "MLB",
+    "name": "Chicago White Sox",
+    "abbrev": "CWS"
+  },
+  {
+    "id": "MLB:CIN",
+    "league": "MLB",
+    "name": "Cincinnati Reds",
+    "abbrev": "CIN"
+  },
+  {
+    "id": "MLB:CLE",
+    "league": "MLB",
+    "name": "Cleveland Guardians",
+    "abbrev": "CLE"
+  },
+  {
+    "id": "MLB:COL",
+    "league": "MLB",
+    "name": "Colorado Rockies",
+    "abbrev": "COL"
+  },
+  {
+    "id": "MLB:DET",
+    "league": "MLB",
+    "name": "Detroit Tigers",
+    "abbrev": "DET"
+  },
+  {
+    "id": "MLB:HOU",
+    "league": "MLB",
+    "name": "Houston Astros",
+    "abbrev": "HOU"
+  },
+  {
+    "id": "MLB:KC",
+    "league": "MLB",
+    "name": "Kansas City Royals",
+    "abbrev": "KC"
+  },
+  {
+    "id": "MLB:LAA",
+    "league": "MLB",
+    "name": "Los Angeles Angels",
+    "abbrev": "LAA"
+  },
+  {
+    "id": "MLB:LAD",
+    "league": "MLB",
+    "name": "Los Angeles Dodgers",
+    "abbrev": "LAD"
+  },
+  {
+    "id": "MLB:MIA",
+    "league": "MLB",
+    "name": "Miami Marlins",
+    "abbrev": "MIA"
+  },
+  {
+    "id": "MLB:MIL",
+    "league": "MLB",
+    "name": "Milwaukee Brewers",
+    "abbrev": "MIL"
+  },
+  {
+    "id": "MLB:MIN",
+    "league": "MLB",
+    "name": "Minnesota Twins",
+    "abbrev": "MIN"
+  },
+  {
+    "id": "MLB:NYM",
+    "league": "MLB",
+    "name": "New York Mets",
+    "abbrev": "NYM"
+  },
+  {
+    "id": "MLB:NYY",
+    "league": "MLB",
+    "name": "New York Yankees",
+    "abbrev": "NYY"
+  },
+  {
+    "id": "MLB:PHI",
+    "league": "MLB",
+    "name": "Philadelphia Phillies",
+    "abbrev": "PHI"
+  },
+  {
+    "id": "MLB:PIT",
+    "league": "MLB",
+    "name": "Pittsburgh Pirates",
+    "abbrev": "PIT"
+  },
+  {
+    "id": "MLB:SD",
+    "league": "MLB",
+    "name": "San Diego Padres",
+    "abbrev": "SD"
+  },
+  {
+    "id": "MLB:SF",
+    "league": "MLB",
+    "name": "San Francisco Giants",
+    "abbrev": "SF"
+  },
+  {
+    "id": "MLB:SEA",
+    "league": "MLB",
+    "name": "Seattle Mariners",
+    "abbrev": "SEA"
+  },
+  {
+    "id": "MLB:STL",
+    "league": "MLB",
+    "name": "St. Louis Cardinals",
+    "abbrev": "STL"
+  },
+  {
+    "id": "MLB:TB",
+    "league": "MLB",
+    "name": "Tampa Bay Rays",
+    "abbrev": "TB"
+  },
+  {
+    "id": "MLB:TEX",
+    "league": "MLB",
+    "name": "Texas Rangers",
+    "abbrev": "TEX"
+  },
+  {
+    "id": "MLB:TOR",
+    "league": "MLB",
+    "name": "Toronto Blue Jays",
+    "abbrev": "TOR"
+  },
+  {
+    "id": "MLB:WSH",
+    "league": "MLB",
+    "name": "Washington Nationals",
+    "abbrev": "WSH"
   },
   {
     "id": "NCAA:air-force",

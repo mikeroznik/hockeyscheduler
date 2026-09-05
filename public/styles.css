@@ -11,6 +11,7 @@
   --ahl: #38b26b;
   --echl: #f0912b;
   --ncaa: #b06cf0;
+  --mlb: #37c0d4;
 }
 
 * { box-sizing: border-box; }
@@ -146,6 +147,7 @@ button:hover { border-color: var(--accent); }
 .chip.AHL { border-left-color: var(--ahl); }
 .chip.ECHL { border-left-color: var(--echl); }
 .chip.NCAA { border-left-color: var(--ncaa); }
+.chip.MLB { border-left-color: var(--mlb); }
 
 .more-link { font-size: 11px; color: var(--accent); cursor: pointer; padding: 1px 5px; }
 
