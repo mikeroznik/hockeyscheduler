@@ -226,6 +226,65 @@ input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px;
 .badge.live { color: #ff8a8a; border-color: #e05656; }
 .badge.final { color: var(--text); }
 
+/* Roadtrip */
+.roadtrip-btn { margin-left: 6px; }
+.roadtrip-btn:not(:disabled) { border-color: var(--echl); color: #ffd9b3; }
+.roadtrip-btn:disabled { opacity: .45; cursor: default; }
+.roadtrip-btn #tripCount {
+  display: inline-block; min-width: 16px; padding: 0 4px; margin-left: 2px;
+  background: var(--echl); color: #1a1205; border-radius: 999px; font-size: 12px; font-weight: 700;
+}
+
+.chip.in-trip { box-shadow: 0 0 0 1px var(--echl) inset; }
+.trip-flag { margin-right: 3px; }
+
+.trip-toggle {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 12px; padding: 8px 10px;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px;
+  cursor: pointer; font-weight: 600;
+}
+
+.day-list { display: flex; flex-direction: column; }
+.day-row { align-items: center; gap: 10px; }
+.day-row-main { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.linklike {
+  background: none; border: none; padding: 0; color: var(--text);
+  cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
+}
+.linklike:hover { color: var(--accent); }
+
+.roadtrip-card { max-width: 620px; max-height: calc(100vh - 40px); overflow: auto; }
+.trip-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
+.btnlike {
+  font: inherit; cursor: pointer; text-decoration: none;
+  background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
+}
+.btnlike:hover { border-color: var(--accent); }
+.btnlike.danger:hover { border-color: #e05656; color: #ff8a8a; }
+
+.trip-list { list-style: none; margin: 8px 0 0; padding: 0; counter-reset: stop; }
+.trip-game {
+  position: relative;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px 10px 40px; margin: 6px 0;
+}
+.trip-game::before {
+  counter-increment: stop; content: counter(stop);
+  position: absolute; left: 10px; top: 10px;
+  width: 22px; height: 22px; border-radius: 999px;
+  background: var(--echl); color: #1a1205; font-weight: 700; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.trip-game-head { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+.trip-remove { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; line-height: 1; }
+.trip-remove:hover { color: #ff8a8a; }
+.trip-meta { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+.trip-leg { text-align: center; padding: 2px 0; }
+.trip-leg a { color: var(--accent); font-size: 12.5px; text-decoration: none; }
+.trip-leg a:hover { text-decoration: underline; }
+
 @media (max-width: 860px) {
   .layout { grid-template-columns: 1fr; }
   .toggle-filters { display: inline-block; }

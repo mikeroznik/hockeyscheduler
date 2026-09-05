@@ -4,6 +4,16 @@ A monthly calendar showing **NHL, AHL, ECHL and NCAA Division I men's** hockey
 schedules for every team. Toggle whole leagues or individual teams on/off from the
 sidebar, page month to month, and see every start time converted to **US Eastern**.
 
+## Roadtrip planner
+
+Open any game and tick **🚗 Add this game to my roadtrip** (also available from the
+"+N more" day list). The **Roadtrip** button in the header (next to Today) opens an
+itinerary of the selected games in chronological order — league, date/time ET,
+venue, and result — with a Google Maps directions link between each arena and one
+"open full route" link for the whole trip. The selection is saved in the browser,
+so it survives reloads and browsing to other months. NCAA games have no venue in
+the feed, so those legs route to `"<school> hockey arena"`.
+
 ## Running
 
 ```bash

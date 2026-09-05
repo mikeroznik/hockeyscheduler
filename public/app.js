@@ -14,6 +14,9 @@ const state = {
   leaguesOn: { NHL: true, AHL: true, ECHL: true, NCAA: true, ...(saved.leaguesOn || {}) },
   teamsOff: new Set(saved.teamsOff || []), // team ids the user unchecked
   expanded: new Set(saved.expanded || []),
+  // Roadtrip: full game objects keyed by id, so a selected game survives navigating
+  // to other months (where it wouldn't otherwise be loaded).
+  roadtrip: new Map((saved.roadtrip || []).map((g) => [g.id, g])),
 };
 function persist() {
   localStorage.setItem(
@@ -24,6 +27,7 @@ function persist() {
       leaguesOn: state.leaguesOn,
       teamsOff: [...state.teamsOff],
       expanded: [...state.expanded],
+      roadtrip: [...state.roadtrip.values()],
     })
   );
 }
@@ -93,6 +97,43 @@ function gameVisible(g) {
   return homeOn || awayOn;
 }
 
+/* ---------- roadtrip ---------- */
+function inRoadtrip(id) { return state.roadtrip.has(id); }
+
+function toggleRoadtrip(g) {
+  if (state.roadtrip.has(g.id)) state.roadtrip.delete(g.id);
+  else state.roadtrip.set(g.id, g);
+  persist();
+  updateRoadtripBtn();
+  renderCalendar(currentGames);
+}
+
+function updateRoadtripBtn() {
+  const n = state.roadtrip.size;
+  $('tripCount').textContent = n;
+  $('roadtripBtn').disabled = n === 0;
+}
+
+function tripSorted() {
+  return [...state.roadtrip.values()].sort(
+    (a, b) =>
+      a.etDate.localeCompare(b.etDate) ||
+      String(a.startISO).localeCompare(String(b.startISO)) ||
+      a.league.localeCompare(b.league)
+  );
+}
+
+// A place string good enough for Google Maps search.
+function mapPlace(g) {
+  if (g.venue) return g.venue;
+  const school = g.home.name.replace(/\bSt\./g, 'State');
+  return `${school} hockey arena`;
+}
+
+function mapsRouteUrl(places) {
+  return 'https://www.google.com/maps/dir/' + places.map((p) => encodeURIComponent(p)).join('/');
+}
+
 /* ---------- rendering: calendar ---------- */
 function setStatus(text) { $('status').textContent = text; }
 
@@ -102,11 +143,12 @@ function renderWeekdays() {
 
 function chipEl(g) {
   const el = document.createElement('div');
-  el.className = `chip ${g.league} ${g.status}`;
+  el.className = `chip ${g.league} ${g.status}` + (inRoadtrip(g.id) ? ' in-trip' : '');
   const scoreTxt = g.score ? `${g.away.abbrev || short(g.away.name)} ${g.score.away} – ${g.home.abbrev || short(g.home.name)} ${g.score.home}` : null;
   const matchup = `${g.away.abbrev || short(g.away.name)} @ ${g.home.abbrev || short(g.home.name)}`;
   const right = g.status === 'live' ? 'LIVE' : g.status === 'final' ? 'F' : g.etTime;
-  el.innerHTML = `<span class="chip-teams">${scoreTxt || matchup}</span><span class="chip-time">${right}</span>`;
+  const flag = inRoadtrip(g.id) ? '<span class="trip-flag" title="On your roadtrip">🚗</span>' : '';
+  el.innerHTML = `<span class="chip-teams">${flag}${scoreTxt || matchup}</span><span class="chip-time">${right}</span>`;
   el.title = `${g.league} · ${g.away.name} at ${g.home.name}\n${g.etWeekday || ''} ${g.etDate} · ${g.etTime} ET${g.kind ? ' · ' + g.kind : ''}${g.venue ? '\n' + g.venue : ''}`;
   el.addEventListener('click', () => openModal(g));
   return el;
@@ -260,30 +302,137 @@ function openModal(g) {
       <div class="modal-row"><span class="k">League</span><span>${g.league}${g.kind ? ' · ' + g.kind : ''}</span></div>
       <div class="modal-row"><span class="k">Date</span><span>${g.etWeekday ? g.etWeekday + ', ' : ''}${g.etDate}</span></div>
       <div class="modal-row"><span class="k">Time (ET)</span><span>${g.etTime}</span></div>
-      ${g.score ? `<div class="modal-row"><span class="k">Score</span><span>${g.away.name.split(' ').pop()} ${g.score.away} – ${g.score.home} ${g.home.name.split(' ').pop()}</span></div>` : ''}
-      ${g.venue ? `<div class="modal-row"><span class="k">Venue</span><span>${g.venue}</span></div>` : ''}
+      ${g.score ? `<div class="modal-row"><span class="k">Score</span><span>${g.away.abbrev || g.away.name} ${g.score.away} – ${g.score.home} ${g.home.abbrev || g.home.name}</span></div>` : ''}
+      <div class="modal-row"><span class="k">Venue</span><span>${g.venue || g.home.name + ' (home)'}</span></div>
       ${statusBadge}
+      <label class="trip-toggle">
+        <input type="checkbox" id="tripCb" ${inRoadtrip(g.id) ? 'checked' : ''} />
+        🚗 Add this game to my roadtrip
+      </label>
     </div>`;
+  body.querySelector('#tripCb').addEventListener('change', () => toggleRoadtrip(g));
   $('gameModal').hidden = false;
 }
 
 function openDayModal(dateIso, games) {
   const body = $('modalBody');
-  const rows = games
-    .filter(gameVisible)
-    .map(
-      (g) => `<div class="modal-row">
-        <span>${g.away.abbrev || g.away.name} @ ${g.home.abbrev || g.home.name}
-          <span style="color:var(--muted)">· ${g.league}</span></span>
-        <span>${g.score ? `${g.score.away}–${g.score.home}` : g.status === 'final' ? 'Final' : g.etTime}</span>
-      </div>`
-    )
-    .join('');
-  body.innerHTML = `<div class="modal-body"><h3>${dateIso}</h3>${rows}</div>`;
+  const list = games.filter(gameVisible);
+  body.innerHTML = `<div class="modal-body"><h3>${dateIso}</h3><div class="day-list"></div></div>`;
+  const wrap = body.querySelector('.day-list');
+  for (const g of list) {
+    const result = g.score
+      ? `${g.score.away}–${g.score.home}`
+      : g.status === 'final' ? 'Final' : g.etTime;
+    const row = document.createElement('div');
+    row.className = 'modal-row day-row';
+    row.innerHTML = `
+      <span class="day-row-main">
+        <input type="checkbox" ${inRoadtrip(g.id) ? 'checked' : ''} title="Add to roadtrip" />
+        <button class="linklike">${g.away.abbrev || g.away.name} @ ${g.home.abbrev || g.home.name}</button>
+        <span style="color:var(--muted)">· ${g.league}</span>
+      </span>
+      <span>${result}</span>`;
+    row.querySelector('input').addEventListener('change', () => toggleRoadtrip(g));
+    row.querySelector('.linklike').addEventListener('click', () => openModal(g));
+    wrap.appendChild(row);
+  }
   $('gameModal').hidden = false;
 }
 
 function closeModal() { $('gameModal').hidden = true; }
+
+/* ---------- roadtrip itinerary ---------- */
+const esc = (s) =>
+  String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function tripItineraryText(games) {
+  const lines = ['🚗 HOCKEY ROADTRIP', ''];
+  games.forEach((g, i) => {
+    lines.push(`${i + 1}. ${g.away.name} @ ${g.home.name}  (${g.league}${g.kind ? ' · ' + g.kind : ''})`);
+    lines.push(`   ${g.etWeekday ? g.etWeekday + ' ' : ''}${g.etDate} · ${g.etTime} ET`);
+    lines.push(`   ${g.venue || g.home.name + ' (home arena)'}`);
+    if (g.score) lines.push(`   Result: ${g.away.name} ${g.score.away} – ${g.score.home} ${g.home.name}`);
+    if (i < games.length - 1) {
+      lines.push(`   ↓ drive: ${mapsRouteUrl([mapPlace(g), mapPlace(games[i + 1])])}`);
+    }
+    lines.push('');
+  });
+  const stops = games.map(mapPlace);
+  lines.push(`Full route: ${mapsRouteUrl(stops.slice(0, 10))}${stops.length > 10 ? '  (first 10 stops)' : ''}`);
+  return lines.join('\n');
+}
+
+function renderRoadtrip() {
+  const games = tripSorted();
+  const body = $('roadtripBody');
+  if (!games.length) {
+    body.innerHTML = '<div class="modal-body"><h3>🚗 Roadtrip</h3><p class="hint">No games selected yet. Open a game and tick “Add to my roadtrip”.</p></div>';
+    $('roadtripModal').hidden = false;
+    return;
+  }
+
+  const stops = games.map(mapPlace);
+  const fullUrl = mapsRouteUrl(stops.slice(0, 10));
+
+  let html = `<div class="modal-body">
+    <h3>🚗 Roadtrip — ${games.length} game${games.length > 1 ? 's' : ''}</h3>
+    <div class="trip-actions">
+      <a class="btnlike" href="${fullUrl}" target="_blank" rel="noopener">🗺️ Open full route in Google Maps${stops.length > 10 ? ' (first 10)' : ''}</a>
+      <button id="tripCopy" class="btnlike">📋 Copy itinerary</button>
+      <button id="tripClear" class="btnlike danger">Clear all</button>
+    </div>
+    <ol class="trip-list">`;
+
+  games.forEach((g, i) => {
+    html += `<li class="trip-game">
+      <div class="trip-game-head">
+        <strong>${esc(g.away.name)} @ ${esc(g.home.name)}</strong>
+        <button class="trip-remove" data-id="${esc(g.id)}" title="Remove">×</button>
+      </div>
+      <div class="trip-meta">${g.league}${g.kind ? ' · ' + g.kind : ''} &nbsp;•&nbsp; ${g.etWeekday ? g.etWeekday + ', ' : ''}${g.etDate} &nbsp;•&nbsp; ${g.etTime} ET</div>
+      <div class="trip-meta">📍 ${esc(g.venue || g.home.name + ' (home arena)')}</div>
+      ${g.score ? `<div class="trip-meta">Result: ${esc(g.away.name)} ${g.score.away} – ${g.score.home} ${esc(g.home.name)}</div>` : ''}
+    </li>`;
+    if (i < games.length - 1) {
+      const legUrl = mapsRouteUrl([mapPlace(g), mapPlace(games[i + 1])]);
+      html += `<li class="trip-leg"><a href="${legUrl}" target="_blank" rel="noopener">↓ Directions to next arena</a></li>`;
+    }
+  });
+
+  html += '</ol></div>';
+  body.innerHTML = html;
+
+  body.querySelector('#tripClear').addEventListener('click', () => {
+    if (!confirm('Remove all games from the roadtrip?')) return;
+    state.roadtrip.clear();
+    persist();
+    updateRoadtripBtn();
+    renderCalendar(currentGames);
+    renderRoadtrip();
+  });
+  body.querySelector('#tripCopy').addEventListener('click', async (e) => {
+    try {
+      await navigator.clipboard.writeText(tripItineraryText(games));
+      e.target.textContent = '✓ Copied';
+      setTimeout(() => (e.target.textContent = '📋 Copy itinerary'), 1500);
+    } catch {
+      e.target.textContent = 'Copy failed';
+    }
+  });
+  body.querySelectorAll('.trip-remove').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      state.roadtrip.delete(btn.dataset.id);
+      persist();
+      updateRoadtripBtn();
+      renderCalendar(currentGames);
+      renderRoadtrip();
+    })
+  );
+
+  $('roadtripModal').hidden = false;
+}
+
+function closeRoadtrip() { $('roadtripModal').hidden = true; }
 
 /* ---------- orchestration ---------- */
 let currentGames = [];
@@ -343,10 +492,18 @@ $('todayBtn').addEventListener('click', () => {
   persist(); go();
 });
 $('toggleFilters').addEventListener('click', () => $('sidebar').classList.toggle('open'));
+$('roadtripBtn').addEventListener('click', renderRoadtrip);
 $('modalClose').addEventListener('click', closeModal);
+$('roadtripClose').addEventListener('click', closeRoadtrip);
 $('gameModal').addEventListener('click', (e) => { if (e.target.id === 'gameModal') closeModal(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+$('roadtripModal').addEventListener('click', (e) => { if (e.target.id === 'roadtripModal') closeRoadtrip(); });
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  closeModal();
+  closeRoadtrip();
+});
 
+updateRoadtripBtn();
 renderWeekdays();
 // Pull the full known team list up front so checkboxes are populated before browsing.
 fetch('/api/teams')

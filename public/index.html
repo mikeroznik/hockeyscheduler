@@ -15,6 +15,7 @@
         <span id="monthLabel">—</span>
         <button id="nextMonth" aria-label="Next month">›</button>
         <button id="todayBtn" class="today-btn">Today</button>
+        <button id="roadtripBtn" class="roadtrip-btn" disabled>🚗 Roadtrip <span id="tripCount">0</span></button>
       </div>
       <div class="header-right">
         <span id="status" class="status"></span>
@@ -47,6 +48,13 @@
       <div class="modal-card">
         <button class="modal-close" id="modalClose" aria-label="Close">×</button>
         <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <div id="roadtripModal" class="modal" hidden>
+      <div class="modal-card roadtrip-card">
+        <button class="modal-close" id="roadtripClose" aria-label="Close">×</button>
+        <div id="roadtripBody"></div>
       </div>
     </div>
 
