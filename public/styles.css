@@ -1,0 +1,237 @@
+:root {
+  --bg: #0f1420;
+  --panel: #171e2e;
+  --panel-2: #1e2740;
+  --border: #2b3550;
+  --text: #e7ecf5;
+  --muted: #9aa7c2;
+  --accent: #4c8dff;
+
+  --nhl: #4c8dff;
+  --ahl: #38b26b;
+  --echl: #f0912b;
+  --ncaa: #b06cf0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button {
+  font: inherit;
+  color: var(--text);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 18px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.app-header h1 { font-size: 18px; margin: 0; }
+
+.month-nav { display: flex; align-items: center; gap: 8px; }
+.month-nav #monthLabel { min-width: 170px; text-align: center; font-weight: 600; font-size: 15px; }
+.month-nav button { min-width: 34px; }
+.today-btn { margin-left: 6px; }
+
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.status { color: var(--muted); font-size: 13px; min-height: 1em; }
+.toggle-filters { display: none; }
+
+.error-banner {
+  background: #3a2417;
+  border-bottom: 1px solid #6b3f22;
+  color: #ffcfa8;
+  padding: 8px 18px;
+  font-size: 13px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 16px;
+  padding: 16px;
+  align-items: start;
+}
+
+.calendar-wrap {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.calendar-scroll { overflow-x: auto; }
+
+.weekday-row, .calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+.weekday-row {
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+}
+.weekday-row div {
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.calendar-grid { }
+.day-cell {
+  min-height: 116px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 5px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.day-cell:nth-child(7n) { border-right: none; }
+.day-cell.outside { background: rgba(0,0,0,.18); }
+.day-cell.today .day-num {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 999px;
+}
+.day-num {
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 1px 6px;
+  min-width: 22px;
+  text-align: center;
+}
+.day-cell.outside .day-num { opacity: .5; }
+
+.chip {
+  border-left: 3px solid var(--border);
+  background: var(--panel-2);
+  border-radius: 4px;
+  padding: 2px 5px;
+  font-size: 11.5px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+.chip:hover { filter: brightness(1.15); }
+.chip .chip-time { color: var(--muted); flex-shrink: 0; }
+.chip.final .chip-time { color: var(--text); }
+.chip.live { box-shadow: 0 0 0 1px #e05656 inset; }
+.chip.live .chip-time { color: #ff8a8a; font-weight: 600; }
+
+.chip.NHL { border-left-color: var(--nhl); }
+.chip.AHL { border-left-color: var(--ahl); }
+.chip.ECHL { border-left-color: var(--echl); }
+.chip.NCAA { border-left-color: var(--ncaa); }
+
+.more-link { font-size: 11px; color: var(--accent); cursor: pointer; padding: 1px 5px; }
+
+/* Sidebar */
+.sidebar {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+}
+.sidebar-head { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
+.sidebar-head .hint { color: var(--muted); font-size: 12px; }
+
+.league-block { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+.league-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--panel-2);
+}
+.league-row .swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.league-row .league-name { font-weight: 600; }
+.league-row .count { color: var(--muted); font-size: 12px; margin-left: auto; }
+.league-row .caret { cursor: pointer; user-select: none; width: 18px; text-align: center; color: var(--muted); }
+
+.league-note {
+  padding: 6px 10px 8px;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--panel-2);
+  border-top: 1px solid var(--border);
+}
+
+.team-list { padding: 6px 10px 10px; display: none; }
+.team-list.open { display: block; }
+.team-list .bulk { display: flex; gap: 8px; margin-bottom: 6px; }
+.team-list .bulk button { padding: 2px 8px; font-size: 12px; }
+.team-item { display: flex; align-items: center; gap: 7px; padding: 2px 0; font-size: 13px; }
+.team-item label { cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
+
+/* Modal */
+.modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 50;
+  padding: 20px;
+}
+.modal[hidden] { display: none; }
+.modal-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  max-width: 380px;
+  width: 100%;
+  position: relative;
+}
+.modal-close {
+  position: absolute; top: 8px; right: 10px;
+  background: none; border: none; font-size: 20px; color: var(--muted);
+}
+.modal-body h3 { margin: 0 0 4px; }
+.modal-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.modal-row:last-child { border-bottom: none; }
+.modal-row .k { color: var(--muted); }
+.badge {
+  display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px;
+  border: 1px solid var(--border); margin-top: 6px;
+}
+.badge.live { color: #ff8a8a; border-color: #e05656; }
+.badge.final { color: var(--text); }
+
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  .toggle-filters { display: inline-block; }
+  .sidebar { position: static; max-height: none; display: none; order: -1; }
+  .sidebar.open { display: block; }
+  .calendar-inner { min-width: 680px; }
+  .day-cell { min-height: 92px; }
+  .month-nav #monthLabel { min-width: 130px; font-size: 14px; }
+}

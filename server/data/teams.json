@@ -1,0 +1,980 @@
+[
+  {
+    "id": "AHL:ABB",
+    "league": "AHL",
+    "name": "Abbotsford Canucks",
+    "abbrev": "ABB"
+  },
+  {
+    "id": "AHL:BAK",
+    "league": "AHL",
+    "name": "Bakersfield Condors",
+    "abbrev": "BAK"
+  },
+  {
+    "id": "AHL:BEL",
+    "league": "AHL",
+    "name": "Belleville Senators",
+    "abbrev": "BEL"
+  },
+  {
+    "id": "AHL:BRI",
+    "league": "AHL",
+    "name": "Bridgeport Islanders",
+    "abbrev": "BRI"
+  },
+  {
+    "id": "AHL:CGY",
+    "league": "AHL",
+    "name": "Calgary Wranglers",
+    "abbrev": "CGY"
+  },
+  {
+    "id": "AHL:CLT",
+    "league": "AHL",
+    "name": "Charlotte Checkers",
+    "abbrev": "CLT"
+  },
+  {
+    "id": "AHL:CHI",
+    "league": "AHL",
+    "name": "Chicago Wolves",
+    "abbrev": "CHI"
+  },
+  {
+    "id": "AHL:CLE",
+    "league": "AHL",
+    "name": "Cleveland Monsters",
+    "abbrev": "CLE"
+  },
+  {
+    "id": "AHL:CV",
+    "league": "AHL",
+    "name": "Coachella Valley Firebirds",
+    "abbrev": "CV"
+  },
+  {
+    "id": "AHL:COL",
+    "league": "AHL",
+    "name": "Colorado Eagles",
+    "abbrev": "COL"
+  },
+  {
+    "id": "AHL:GR",
+    "league": "AHL",
+    "name": "Grand Rapids Griffins",
+    "abbrev": "GR"
+  },
+  {
+    "id": "AHL:HAM",
+    "league": "AHL",
+    "name": "Hamilton Hammers",
+    "abbrev": "HAM"
+  },
+  {
+    "id": "AHL:HFD",
+    "league": "AHL",
+    "name": "Hartford Wolf Pack",
+    "abbrev": "HFD"
+  },
+  {
+    "id": "AHL:HSK",
+    "league": "AHL",
+    "name": "Henderson Silver Knights",
+    "abbrev": "HSK"
+  },
+  {
+    "id": "AHL:HER",
+    "league": "AHL",
+    "name": "Hershey Bears",
+    "abbrev": "HER"
+  },
+  {
+    "id": "AHL:IA",
+    "league": "AHL",
+    "name": "Iowa Wild",
+    "abbrev": "IA"
+  },
+  {
+    "id": "AHL:LAV",
+    "league": "AHL",
+    "name": "Laval Rocket",
+    "abbrev": "LAV"
+  },
+  {
+    "id": "AHL:LV",
+    "league": "AHL",
+    "name": "Lehigh Valley Phantoms",
+    "abbrev": "LV"
+  },
+  {
+    "id": "AHL:MB",
+    "league": "AHL",
+    "name": "Manitoba Moose",
+    "abbrev": "MB"
+  },
+  {
+    "id": "AHL:MIL",
+    "league": "AHL",
+    "name": "Milwaukee Admirals",
+    "abbrev": "MIL"
+  },
+  {
+    "id": "AHL:ONT",
+    "league": "AHL",
+    "name": "Ontario Reign",
+    "abbrev": "ONT"
+  },
+  {
+    "id": "AHL:PRO",
+    "league": "AHL",
+    "name": "Providence Bruins",
+    "abbrev": "PRO"
+  },
+  {
+    "id": "AHL:ROC",
+    "league": "AHL",
+    "name": "Rochester Americans",
+    "abbrev": "ROC"
+  },
+  {
+    "id": "AHL:RFD",
+    "league": "AHL",
+    "name": "Rockford IceHogs",
+    "abbrev": "RFD"
+  },
+  {
+    "id": "AHL:SD",
+    "league": "AHL",
+    "name": "San Diego Gulls",
+    "abbrev": "SD"
+  },
+  {
+    "id": "AHL:SJ",
+    "league": "AHL",
+    "name": "San Jose Barracuda",
+    "abbrev": "SJ"
+  },
+  {
+    "id": "AHL:SPR",
+    "league": "AHL",
+    "name": "Springfield Thunderbirds",
+    "abbrev": "SPR"
+  },
+  {
+    "id": "AHL:SYR",
+    "league": "AHL",
+    "name": "Syracuse Crunch",
+    "abbrev": "SYR"
+  },
+  {
+    "id": "AHL:TEX",
+    "league": "AHL",
+    "name": "Texas Stars",
+    "abbrev": "TEX"
+  },
+  {
+    "id": "AHL:TOR",
+    "league": "AHL",
+    "name": "Toronto Marlies",
+    "abbrev": "TOR"
+  },
+  {
+    "id": "AHL:TUC",
+    "league": "AHL",
+    "name": "Tucson Roadrunners",
+    "abbrev": "TUC"
+  },
+  {
+    "id": "AHL:UTC",
+    "league": "AHL",
+    "name": "Utica Comets",
+    "abbrev": "UTC"
+  },
+  {
+    "id": "AHL:WBS",
+    "league": "AHL",
+    "name": "Wilkes-Barre/Scranton Penguins",
+    "abbrev": "WBS"
+  },
+  {
+    "id": "ECHL:ADK",
+    "league": "ECHL",
+    "name": "Adirondack Thunder",
+    "abbrev": "ADK"
+  },
+  {
+    "id": "ECHL:ALN",
+    "league": "ECHL",
+    "name": "Allen Americans",
+    "abbrev": "ALN"
+  },
+  {
+    "id": "ECHL:ATL",
+    "league": "ECHL",
+    "name": "Atlanta Gladiators",
+    "abbrev": "ATL"
+  },
+  {
+    "id": "ECHL:BLM",
+    "league": "ECHL",
+    "name": "Bloomington Bison",
+    "abbrev": "BLM"
+  },
+  {
+    "id": "ECHL:CIN",
+    "league": "ECHL",
+    "name": "Cincinnati Cyclones",
+    "abbrev": "CIN"
+  },
+  {
+    "id": "ECHL:FLA",
+    "league": "ECHL",
+    "name": "Florida Everblades",
+    "abbrev": "FLA"
+  },
+  {
+    "id": "ECHL:FW",
+    "league": "ECHL",
+    "name": "Fort Wayne Komets",
+    "abbrev": "FW"
+  },
+  {
+    "id": "ECHL:GSO",
+    "league": "ECHL",
+    "name": "Greensboro Gargoyles",
+    "abbrev": "GSO"
+  },
+  {
+    "id": "ECHL:GVL",
+    "league": "ECHL",
+    "name": "Greenville Swamp Rabbits",
+    "abbrev": "GVL"
+  },
+  {
+    "id": "ECHL:IDH",
+    "league": "ECHL",
+    "name": "Idaho Steelheads",
+    "abbrev": "IDH"
+  },
+  {
+    "id": "ECHL:IND",
+    "league": "ECHL",
+    "name": "Indy Fuel",
+    "abbrev": "IND"
+  },
+  {
+    "id": "ECHL:IA",
+    "league": "ECHL",
+    "name": "Iowa Heartlanders",
+    "abbrev": "IA"
+  },
+  {
+    "id": "ECHL:JAX",
+    "league": "ECHL",
+    "name": "Jacksonville Icemen",
+    "abbrev": "JAX"
+  },
+  {
+    "id": "ECHL:KAL",
+    "league": "ECHL",
+    "name": "Kalamazoo Wings",
+    "abbrev": "KAL"
+  },
+  {
+    "id": "ECHL:KC",
+    "league": "ECHL",
+    "name": "Kansas City Mavericks",
+    "abbrev": "KC"
+  },
+  {
+    "id": "ECHL:MNE",
+    "league": "ECHL",
+    "name": "Maine Mariners",
+    "abbrev": "MNE"
+  },
+  {
+    "id": "ECHL:NM",
+    "league": "ECHL",
+    "name": "New Mexico Goatheads",
+    "abbrev": "NM"
+  },
+  {
+    "id": "ECHL:NOR",
+    "league": "ECHL",
+    "name": "Norfolk Admirals",
+    "abbrev": "NOR"
+  },
+  {
+    "id": "ECHL:ORL",
+    "league": "ECHL",
+    "name": "Orlando Solar Bears",
+    "abbrev": "ORL"
+  },
+  {
+    "id": "ECHL:RC",
+    "league": "ECHL",
+    "name": "Rapid City Rush",
+    "abbrev": "RC"
+  },
+  {
+    "id": "ECHL:REA",
+    "league": "ECHL",
+    "name": "Reading Royals",
+    "abbrev": "REA"
+  },
+  {
+    "id": "ECHL:SAV",
+    "league": "ECHL",
+    "name": "Savannah Ghost Pirates",
+    "abbrev": "SAV"
+  },
+  {
+    "id": "ECHL:SC",
+    "league": "ECHL",
+    "name": "South Carolina Stingrays",
+    "abbrev": "SC"
+  },
+  {
+    "id": "ECHL:STAR",
+    "league": "ECHL",
+    "name": "Stars",
+    "abbrev": "STAR"
+  },
+  {
+    "id": "ECHL:STPE",
+    "league": "ECHL",
+    "name": "Stripes",
+    "abbrev": "STPE"
+  },
+  {
+    "id": "ECHL:TAH",
+    "league": "ECHL",
+    "name": "Tahoe Knight Monsters",
+    "abbrev": "TAH"
+  },
+  {
+    "id": "ECHL:TOL",
+    "league": "ECHL",
+    "name": "Toledo Walleye",
+    "abbrev": "TOL"
+  },
+  {
+    "id": "ECHL:TRE",
+    "league": "ECHL",
+    "name": "Trenton Ironhawks",
+    "abbrev": "TRE"
+  },
+  {
+    "id": "ECHL:TR",
+    "league": "ECHL",
+    "name": "Trois-Rivières Lions",
+    "abbrev": "TR"
+  },
+  {
+    "id": "ECHL:TUL",
+    "league": "ECHL",
+    "name": "Tulsa Oilers",
+    "abbrev": "TUL"
+  },
+  {
+    "id": "ECHL:UTA",
+    "league": "ECHL",
+    "name": "Utah Grizzlies",
+    "abbrev": "UTA"
+  },
+  {
+    "id": "ECHL:WHL",
+    "league": "ECHL",
+    "name": "Wheeling Nailers",
+    "abbrev": "WHL"
+  },
+  {
+    "id": "ECHL:WIC",
+    "league": "ECHL",
+    "name": "Wichita Thunder",
+    "abbrev": "WIC"
+  },
+  {
+    "id": "ECHL:WOR",
+    "league": "ECHL",
+    "name": "Worcester Railers",
+    "abbrev": "WOR"
+  },
+  {
+    "id": "NCAA:air-force",
+    "league": "NCAA",
+    "name": "Air Force",
+    "abbrev": "AIRFOR"
+  },
+  {
+    "id": "NCAA:alas-anchorage",
+    "league": "NCAA",
+    "name": "Alas. Anchorage",
+    "abbrev": "AK ANC"
+  },
+  {
+    "id": "NCAA:alas-fairbanks",
+    "league": "NCAA",
+    "name": "Alas. Fairbanks",
+    "abbrev": "AK FBK"
+  },
+  {
+    "id": "NCAA:arizona-st",
+    "league": "NCAA",
+    "name": "Arizona St.",
+    "abbrev": "AZ ST"
+  },
+  {
+    "id": "NCAA:army",
+    "league": "NCAA",
+    "name": "Army West Point",
+    "abbrev": "ARMY"
+  },
+  {
+    "id": "NCAA:assumption",
+    "league": "NCAA",
+    "name": "Assumption",
+    "abbrev": "ASSUMP"
+  },
+  {
+    "id": "NCAA:augustana-sd",
+    "league": "NCAA",
+    "name": "Augustana (SD)",
+    "abbrev": "AUG SD"
+  },
+  {
+    "id": "NCAA:bemidji-st",
+    "league": "NCAA",
+    "name": "Bemidji St.",
+    "abbrev": "BEMDJI"
+  },
+  {
+    "id": "NCAA:bentley",
+    "league": "NCAA",
+    "name": "Bentley",
+    "abbrev": "BENTLY"
+  },
+  {
+    "id": "NCAA:boston-college",
+    "league": "NCAA",
+    "name": "Boston College",
+    "abbrev": "BC"
+  },
+  {
+    "id": "NCAA:boston-u",
+    "league": "NCAA",
+    "name": "Boston U.",
+    "abbrev": "BU"
+  },
+  {
+    "id": "NCAA:bowling-green",
+    "league": "NCAA",
+    "name": "Bowling Green",
+    "abbrev": "BGSU"
+  },
+  {
+    "id": "NCAA:brown",
+    "league": "NCAA",
+    "name": "Brown",
+    "abbrev": "BROWN"
+  },
+  {
+    "id": "NCAA:canisius",
+    "league": "NCAA",
+    "name": "Canisius",
+    "abbrev": "CANISI"
+  },
+  {
+    "id": "NCAA:clarkson",
+    "league": "NCAA",
+    "name": "Clarkson",
+    "abbrev": "CLARKS"
+  },
+  {
+    "id": "NCAA:colgate",
+    "league": "NCAA",
+    "name": "Colgate",
+    "abbrev": "COLGAT"
+  },
+  {
+    "id": "NCAA:colorado-col",
+    "league": "NCAA",
+    "name": "Colorado Col.",
+    "abbrev": "CO COL"
+  },
+  {
+    "id": "NCAA:cornell",
+    "league": "NCAA",
+    "name": "Cornell",
+    "abbrev": "CORN"
+  },
+  {
+    "id": "NCAA:dartmouth",
+    "league": "NCAA",
+    "name": "Dartmouth",
+    "abbrev": "DART"
+  },
+  {
+    "id": "NCAA:denver",
+    "league": "NCAA",
+    "name": "Denver",
+    "abbrev": "DENVER"
+  },
+  {
+    "id": "NCAA:ferris-st",
+    "league": "NCAA",
+    "name": "Ferris St.",
+    "abbrev": "FERRIS"
+  },
+  {
+    "id": "NCAA:harvard",
+    "league": "NCAA",
+    "name": "Harvard",
+    "abbrev": "HARV"
+  },
+  {
+    "id": "NCAA:holy-cross",
+    "league": "NCAA",
+    "name": "Holy Cross",
+    "abbrev": "HOLYCR"
+  },
+  {
+    "id": "NCAA:lake-superior-st",
+    "league": "NCAA",
+    "name": "Lake Superior St.",
+    "abbrev": "LK SUP"
+  },
+  {
+    "id": "NCAA:lindenwood-mo",
+    "league": "NCAA",
+    "name": "Lindenwood",
+    "abbrev": "LINWOD"
+  },
+  {
+    "id": "NCAA:long-island",
+    "league": "NCAA",
+    "name": "LIU",
+    "abbrev": "LIU"
+  },
+  {
+    "id": "NCAA:maine",
+    "league": "NCAA",
+    "name": "Maine",
+    "abbrev": "MAINE"
+  },
+  {
+    "id": "NCAA:massachusetts",
+    "league": "NCAA",
+    "name": "Massachusetts",
+    "abbrev": "UMASS"
+  },
+  {
+    "id": "NCAA:mercyhurst",
+    "league": "NCAA",
+    "name": "Mercyhurst",
+    "abbrev": "MERCYH"
+  },
+  {
+    "id": "NCAA:merrimack",
+    "league": "NCAA",
+    "name": "Merrimack",
+    "abbrev": "MERMCK"
+  },
+  {
+    "id": "NCAA:miami-oh",
+    "league": "NCAA",
+    "name": "Miami (OH)",
+    "abbrev": "MIA OH"
+  },
+  {
+    "id": "NCAA:michigan",
+    "league": "NCAA",
+    "name": "Michigan",
+    "abbrev": "MICH"
+  },
+  {
+    "id": "NCAA:michigan-st",
+    "league": "NCAA",
+    "name": "Michigan St.",
+    "abbrev": "MICHST"
+  },
+  {
+    "id": "NCAA:michigan-tech",
+    "league": "NCAA",
+    "name": "Michigan Tech",
+    "abbrev": "MITECH"
+  },
+  {
+    "id": "NCAA:minn-duluth",
+    "league": "NCAA",
+    "name": "Minn. Duluth",
+    "abbrev": "MN DUL"
+  },
+  {
+    "id": "NCAA:minnesota",
+    "league": "NCAA",
+    "name": "Minnesota",
+    "abbrev": "MINN"
+  },
+  {
+    "id": "NCAA:minn-st-mankato",
+    "league": "NCAA",
+    "name": "Minnesota St.",
+    "abbrev": "MNSTMA"
+  },
+  {
+    "id": "NCAA:new-hampshire",
+    "league": "NCAA",
+    "name": "New Hampshire",
+    "abbrev": "UNH"
+  },
+  {
+    "id": "NCAA:niagara",
+    "league": "NCAA",
+    "name": "Niagara",
+    "abbrev": "NIAGRA"
+  },
+  {
+    "id": "NCAA:north-dakota",
+    "league": "NCAA",
+    "name": "North Dakota",
+    "abbrev": "NO DAK"
+  },
+  {
+    "id": "NCAA:northeastern",
+    "league": "NCAA",
+    "name": "Northeastern",
+    "abbrev": "NOEAST"
+  },
+  {
+    "id": "NCAA:northern-mich",
+    "league": "NCAA",
+    "name": "Northern Mich.",
+    "abbrev": "N MICH"
+  },
+  {
+    "id": "NCAA:notre-dame",
+    "league": "NCAA",
+    "name": "Notre Dame",
+    "abbrev": "N DAME"
+  },
+  {
+    "id": "NCAA:ohio-st",
+    "league": "NCAA",
+    "name": "Ohio St.",
+    "abbrev": "OHIOST"
+  },
+  {
+    "id": "NCAA:neb-omaha",
+    "league": "NCAA",
+    "name": "Omaha",
+    "abbrev": "OMAHA"
+  },
+  {
+    "id": "NCAA:penn-st",
+    "league": "NCAA",
+    "name": "Penn St.",
+    "abbrev": "PENNST"
+  },
+  {
+    "id": "NCAA:princeton",
+    "league": "NCAA",
+    "name": "Princeton",
+    "abbrev": "PRINCE"
+  },
+  {
+    "id": "NCAA:providence",
+    "league": "NCAA",
+    "name": "Providence",
+    "abbrev": "PROV"
+  },
+  {
+    "id": "NCAA:quinnipiac",
+    "league": "NCAA",
+    "name": "Quinnipiac",
+    "abbrev": "QUINN"
+  },
+  {
+    "id": "NCAA:rensselaer",
+    "league": "NCAA",
+    "name": "Rensselaer",
+    "abbrev": "RPI"
+  },
+  {
+    "id": "NCAA:rochester-inst",
+    "league": "NCAA",
+    "name": "RIT",
+    "abbrev": "RIT"
+  },
+  {
+    "id": "NCAA:robert-morris",
+    "league": "NCAA",
+    "name": "Robert Morris",
+    "abbrev": "ROBMOR"
+  },
+  {
+    "id": "NCAA:sacred-heart",
+    "league": "NCAA",
+    "name": "Sacred Heart",
+    "abbrev": "SACHRT"
+  },
+  {
+    "id": "NCAA:st-cloud-st",
+    "league": "NCAA",
+    "name": "St. Cloud St.",
+    "abbrev": "SCSU"
+  },
+  {
+    "id": "NCAA:st-lawrence",
+    "league": "NCAA",
+    "name": "St. Lawrence",
+    "abbrev": "ST LAW"
+  },
+  {
+    "id": "NCAA:st-thomas-mn",
+    "league": "NCAA",
+    "name": "St. Thomas (MN)",
+    "abbrev": "STTHOM"
+  },
+  {
+    "id": "NCAA:stonehill",
+    "league": "NCAA",
+    "name": "Stonehill",
+    "abbrev": "STONEH"
+  },
+  {
+    "id": "NCAA:uconn",
+    "league": "NCAA",
+    "name": "UConn",
+    "abbrev": "UCONN"
+  },
+  {
+    "id": "NCAA:umass-lowell",
+    "league": "NCAA",
+    "name": "UMass Lowell",
+    "abbrev": "UMASSL"
+  },
+  {
+    "id": "NCAA:union-ny",
+    "league": "NCAA",
+    "name": "Union (NY)",
+    "abbrev": "UNION"
+  },
+  {
+    "id": "NCAA:vermont",
+    "league": "NCAA",
+    "name": "Vermont",
+    "abbrev": "VERMNT"
+  },
+  {
+    "id": "NCAA:western-mich",
+    "league": "NCAA",
+    "name": "Western Mich.",
+    "abbrev": "W MICH"
+  },
+  {
+    "id": "NCAA:wisconsin",
+    "league": "NCAA",
+    "name": "Wisconsin",
+    "abbrev": "WISC"
+  },
+  {
+    "id": "NCAA:yale",
+    "league": "NCAA",
+    "name": "Yale",
+    "abbrev": "YALE"
+  },
+  {
+    "id": "NHL:ANA",
+    "league": "NHL",
+    "name": "Anaheim Ducks",
+    "abbrev": "ANA"
+  },
+  {
+    "id": "NHL:BOS",
+    "league": "NHL",
+    "name": "Boston Bruins",
+    "abbrev": "BOS"
+  },
+  {
+    "id": "NHL:BUF",
+    "league": "NHL",
+    "name": "Buffalo Sabres",
+    "abbrev": "BUF"
+  },
+  {
+    "id": "NHL:CGY",
+    "league": "NHL",
+    "name": "Calgary Flames",
+    "abbrev": "CGY"
+  },
+  {
+    "id": "NHL:CAR",
+    "league": "NHL",
+    "name": "Carolina Hurricanes",
+    "abbrev": "CAR"
+  },
+  {
+    "id": "NHL:CHI",
+    "league": "NHL",
+    "name": "Chicago Blackhawks",
+    "abbrev": "CHI"
+  },
+  {
+    "id": "NHL:COL",
+    "league": "NHL",
+    "name": "Colorado Avalanche",
+    "abbrev": "COL"
+  },
+  {
+    "id": "NHL:CBJ",
+    "league": "NHL",
+    "name": "Columbus Blue Jackets",
+    "abbrev": "CBJ"
+  },
+  {
+    "id": "NHL:DAL",
+    "league": "NHL",
+    "name": "Dallas Stars",
+    "abbrev": "DAL"
+  },
+  {
+    "id": "NHL:DET",
+    "league": "NHL",
+    "name": "Detroit Red Wings",
+    "abbrev": "DET"
+  },
+  {
+    "id": "NHL:EDM",
+    "league": "NHL",
+    "name": "Edmonton Oilers",
+    "abbrev": "EDM"
+  },
+  {
+    "id": "NHL:FLA",
+    "league": "NHL",
+    "name": "Florida Panthers",
+    "abbrev": "FLA"
+  },
+  {
+    "id": "NHL:LAK",
+    "league": "NHL",
+    "name": "Los Angeles Kings",
+    "abbrev": "LAK"
+  },
+  {
+    "id": "NHL:MIN",
+    "league": "NHL",
+    "name": "Minnesota Wild",
+    "abbrev": "MIN"
+  },
+  {
+    "id": "NHL:MTL",
+    "league": "NHL",
+    "name": "Montréal Canadiens",
+    "abbrev": "MTL"
+  },
+  {
+    "id": "NHL:NSH",
+    "league": "NHL",
+    "name": "Nashville Predators",
+    "abbrev": "NSH"
+  },
+  {
+    "id": "NHL:NJD",
+    "league": "NHL",
+    "name": "New Jersey Devils",
+    "abbrev": "NJD"
+  },
+  {
+    "id": "NHL:NYI",
+    "league": "NHL",
+    "name": "New York Islanders",
+    "abbrev": "NYI"
+  },
+  {
+    "id": "NHL:NYR",
+    "league": "NHL",
+    "name": "New York Rangers",
+    "abbrev": "NYR"
+  },
+  {
+    "id": "NHL:OTT",
+    "league": "NHL",
+    "name": "Ottawa Senators",
+    "abbrev": "OTT"
+  },
+  {
+    "id": "NHL:PHI",
+    "league": "NHL",
+    "name": "Philadelphia Flyers",
+    "abbrev": "PHI"
+  },
+  {
+    "id": "NHL:PIT",
+    "league": "NHL",
+    "name": "Pittsburgh Penguins",
+    "abbrev": "PIT"
+  },
+  {
+    "id": "NHL:SJS",
+    "league": "NHL",
+    "name": "San Jose Sharks",
+    "abbrev": "SJS"
+  },
+  {
+    "id": "NHL:SEA",
+    "league": "NHL",
+    "name": "Seattle Kraken",
+    "abbrev": "SEA"
+  },
+  {
+    "id": "NHL:STL",
+    "league": "NHL",
+    "name": "St. Louis Blues",
+    "abbrev": "STL"
+  },
+  {
+    "id": "NHL:TBL",
+    "league": "NHL",
+    "name": "Tampa Bay Lightning",
+    "abbrev": "TBL"
+  },
+  {
+    "id": "NHL:TOR",
+    "league": "NHL",
+    "name": "Toronto Maple Leafs",
+    "abbrev": "TOR"
+  },
+  {
+    "id": "NHL:UTA",
+    "league": "NHL",
+    "name": "Utah Mammoth",
+    "abbrev": "UTA"
+  },
+  {
+    "id": "NHL:VAN",
+    "league": "NHL",
+    "name": "Vancouver Canucks",
+    "abbrev": "VAN"
+  },
+  {
+    "id": "NHL:VGK",
+    "league": "NHL",
+    "name": "Vegas Golden Knights",
+    "abbrev": "VGK"
+  },
+  {
+    "id": "NHL:WSH",
+    "league": "NHL",
+    "name": "Washington Capitals",
+    "abbrev": "WSH"
+  },
+  {
+    "id": "NHL:WPG",
+    "league": "NHL",
+    "name": "Winnipeg Jets",
+    "abbrev": "WPG"
+  }
+]

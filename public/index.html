@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hockey Schedule Calendar</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%8F%92%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>🏒 Hockey Schedule</h1>
+      <div class="month-nav">
+        <button id="prevMonth" aria-label="Previous month">‹</button>
+        <span id="monthLabel">—</span>
+        <button id="nextMonth" aria-label="Next month">›</button>
+        <button id="todayBtn" class="today-btn">Today</button>
+      </div>
+      <div class="header-right">
+        <span id="status" class="status"></span>
+        <button id="toggleFilters" class="toggle-filters">Filters</button>
+      </div>
+    </header>
+
+    <div id="errorBanner" class="error-banner" hidden></div>
+
+    <main class="layout">
+      <section class="calendar-wrap">
+        <div class="calendar-scroll">
+          <div class="calendar-inner">
+            <div class="weekday-row" id="weekdayRow"></div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-head">
+          <strong>Leagues &amp; Teams</strong>
+          <span class="hint">Times shown in US Eastern</span>
+        </div>
+        <div id="filterList" class="filter-list"></div>
+      </aside>
+    </main>
+
+    <div id="gameModal" class="modal" hidden>
+      <div class="modal-card">
+        <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>

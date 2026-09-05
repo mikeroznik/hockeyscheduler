@@ -1,0 +1,13 @@
+{
+  "name": "hockey-schedule-calendar",
+  "version": "1.0.0",
+  "description": "Monthly calendar of NHL, AHL, ECHL and NCAA (D1 men) hockey schedules, all times in US Eastern.",
+  "type": "module",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

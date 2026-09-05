@@ -1,1 +1,56 @@
-# hockeyscheduler
+# Hockey Schedule Calendar
+
+A monthly calendar showing **NHL, AHL, ECHL and NCAA Division I men's** hockey
+schedules for every team. Toggle whole leagues or individual teams on/off from the
+sidebar, page month to month, and see every start time converted to **US Eastern**.
+
+## Running
+
+```bash
+npm install
+npm start
+```
+
+Then open <http://localhost:4100>. Set `PORT` to use a different port.
+
+`npm run dev` runs the same thing with `--watch` for development.
+
+## How it works
+
+A small Express server (`server/`) proxies and normalizes four public schedule
+feeds, then serves a dependency-free vanilla-JS front end (`public/`).
+
+| League | Source |
+|---|---|
+| NHL | `api-web.nhle.com` club schedule feed |
+| AHL | HockeyTech / LeagueStat feed (`lscluster.hockeytech.com`, `client_code=ahl`) |
+| ECHL | HockeyTech / LeagueStat feed (`client_code=echl`) |
+| NCAA D1 men | `sdataprod.ncaa.com` GraphQL (the feed ncaa.com's own scoreboard uses) |
+
+All four feeds give a UTC instant (or an offset-aware timestamp); the server
+converts each one to America/New_York with `Intl.DateTimeFormat` and returns both
+the Eastern date and the Eastern clock time. Games with no confirmed time show
+`TBD`.
+
+### Endpoints
+
+- `GET /api/games?start=YYYY-MM-DD&end=YYYY-MM-DD[&leagues=NHL,AHL,ECHL,NCAA]`
+  returns `{ range, games, teams, errors }`. Each league is loaded independently,
+  so if one feed is down the others still render and the failing league is listed
+  in `errors`.
+- `GET /api/teams` returns the accumulated team registry.
+
+### Caching
+
+Responses are cached in memory with a short TTL for today/future dates and a long
+TTL for past dates. The team list is persisted to `server/data/teams.json` so
+leagues without a clean "all teams" endpoint (NCAA) fill in as months are browsed;
+the 32 current NHL teams are seeded at startup.
+
+## Notes / limitations
+
+- Off-season, the AHL/ECHL/NCAA feeds don't publish far-future schedules yet, so
+  future months fill in as each league releases its season.
+- NCAA coverage is Division I men only.
+- This relies on undocumented public feeds; if one changes shape, that league's
+  loader in `server/lib/` is the place to adjust.
