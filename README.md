@@ -15,6 +15,27 @@ Then open <http://localhost:4100>. Set `PORT` to use a different port.
 
 `npm run dev` runs the same thing with `--watch` for development.
 
+## Deploying to Vercel
+
+```bash
+npm i -g vercel   # if you don't have the CLI
+vercel            # first run links/creates the project
+vercel --prod     # production deploy
+```
+
+`vercel.json` serves `public/` as static assets on the CDN and routes `/api/*` to
+`api/index.js`, which wraps the same Express app (`server/app.js`). No env vars or
+database required.
+
+Serverless caveats (all non-fatal): the in-memory response cache resets on cold
+starts, and `server/data/teams.json` isn't writable — persistence falls back to the
+function's temp dir and is skipped if that fails too. The team list still works in
+memory, and every `/api/games` response already includes the teams for the games
+it returns, so only teams from *un-browsed* months are affected.
+
+For a long-lived process instead (keeps the cache warm, persists the team file),
+deploy `npm start` as a single Node service on Render / Railway / Fly / a VPS.
+
 ## How it works
 
 A small Express server (`server/`) proxies and normalizes four public schedule
