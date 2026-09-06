@@ -19,6 +19,7 @@
       </div>
       <div class="header-right">
         <span id="status" class="status"></span>
+        <button id="helpBtn" class="help-btn" aria-label="How this works" title="How this works">?</button>
         <button id="toggleFilters" class="toggle-filters">Filters</button>
       </div>
     </header>
@@ -43,6 +44,62 @@
         <div id="filterList" class="filter-list"></div>
       </aside>
     </main>
+
+    <div id="introModal" class="modal" hidden>
+      <div class="modal-card intro-card">
+        <button class="modal-close" id="introClose" aria-label="Close">×</button>
+        <div class="intro-body">
+          <h2>🏒⚾ Sports Schedule Calendar</h2>
+          <p class="intro-lead">
+            A month-at-a-glance view of every team's schedule across five leagues.
+            <strong>All start times are US Eastern.</strong>
+          </p>
+
+          <h3>The leagues</h3>
+          <ul class="intro-legend">
+            <li><span class="dot" style="background:var(--nhl)"></span> <strong>NHL</strong> — National Hockey League</li>
+            <li><span class="dot" style="background:var(--ahl)"></span> <strong>AHL</strong> — American Hockey League</li>
+            <li><span class="dot" style="background:var(--echl)"></span> <strong>ECHL</strong></li>
+            <li><span class="dot" style="background:var(--ncaa)"></span> <strong>NCAA</strong> — Division I men's hockey</li>
+            <li><span class="dot" style="background:var(--mlb)"></span> <strong>MLB</strong> — incl. spring training &amp; postseason</li>
+          </ul>
+
+          <h3>Getting around</h3>
+          <ul class="intro-list">
+            <li><strong>‹ ›</strong> move between months; <strong>Today</strong> jumps back to now.</li>
+            <li>Use the <strong>Leagues &amp; Teams</strong> panel on the right to switch a whole
+              league on/off, or expand one (▸) to pick individual teams. On a phone it's
+              behind the <strong>Filters</strong> button.</li>
+          </ul>
+
+          <h3>Reading a day</h3>
+          <ul class="intro-list">
+            <li>Each game shows <strong>away @ home</strong> and the ET start time — or the
+              score with <strong>F</strong> once it's final, <strong>LIVE</strong> while in progress.</li>
+            <li>A gold <strong>*</strong> means the home team has a promotion that night
+              (giveaway, theme night, fireworks…). NHL &amp; MLB only.</li>
+            <li>Click any game — or <strong>“+N more”</strong> — for full details: venue,
+              exact ET time, and the promotion list.</li>
+          </ul>
+
+          <h3>🚗 Roadtrip planner</h3>
+          <ul class="intro-list">
+            <li>In a game's details, tick <strong>“Add this game to my roadtrip.”</strong></li>
+            <li>The <strong>Roadtrip</strong> button (top bar) then builds an itinerary of your
+              picked games in date order, with a <strong>Google Maps</strong> route between each
+              arena. Your picks are saved in this browser.</li>
+          </ul>
+
+          <p class="intro-foot">
+            Data comes from each league's public feed; schedules for a not-yet-started
+            season fill in as that league releases them. Open this again anytime with the
+            <strong>?</strong> button.
+          </p>
+
+          <button id="introGotIt" class="btnlike intro-cta">Got it — show me the calendar</button>
+        </div>
+      </div>
+    </div>
 
     <div id="gameModal" class="modal" hidden>
       <div class="modal-card">

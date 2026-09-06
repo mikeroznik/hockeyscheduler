@@ -5,6 +5,9 @@ A monthly calendar showing **NHL, AHL, ECHL, NCAA Division I men's** hockey and
 from the sidebar, page month to month, and see every start time converted to
 **US Eastern**.
 
+First-time visitors get a one-time "how it works" overlay (stored in `localStorage`
+as `hsc-intro-seen`); the **?** button in the header reopens it anytime.
+
 ## Promotions
 
 Games with a home-team promotion (giveaway, theme night, fireworks, …) are marked

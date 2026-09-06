@@ -526,7 +526,25 @@ document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
   closeModal();
   closeRoadtrip();
+  closeIntro();
 });
+
+/* ---------- first-visit intro ---------- */
+const INTRO_KEY = 'hsc-intro-seen';
+function openIntro() { $('introModal').hidden = false; }
+function closeIntro() {
+  $('introModal').hidden = true;
+  try { localStorage.setItem(INTRO_KEY, '1'); } catch {}
+}
+$('helpBtn').addEventListener('click', openIntro);
+$('introClose').addEventListener('click', closeIntro);
+$('introGotIt').addEventListener('click', closeIntro);
+$('introModal').addEventListener('click', (e) => { if (e.target.id === 'introModal') closeIntro(); });
+try {
+  if (!localStorage.getItem(INTRO_KEY)) openIntro();
+} catch {
+  openIntro();
+}
 
 updateRoadtripBtn();
 renderWeekdays();

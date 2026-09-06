@@ -53,6 +53,10 @@ button:hover { border-color: var(--accent); }
 .header-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 .status { color: var(--muted); font-size: 13px; min-height: 1em; }
 .toggle-filters { display: none; }
+.help-btn {
+  width: 28px; height: 28px; min-width: 28px; padding: 0;
+  border-radius: 999px; font-weight: 700; line-height: 1;
+}
 
 .error-banner {
   background: #3a2417;
@@ -227,6 +231,23 @@ input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px;
 }
 .badge.live { color: #ff8a8a; border-color: #e05656; }
 .badge.final { color: var(--text); }
+
+/* Intro / how-it-works */
+.intro-card { max-width: 540px; max-height: calc(100vh - 40px); overflow: auto; }
+.intro-body h2 { margin: 0 0 6px; font-size: 20px; padding-right: 26px; }
+.intro-body h3 {
+  margin: 16px 0 6px; font-size: 13px; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--muted);
+}
+.intro-lead { margin: 0 0 4px; color: var(--text); }
+.intro-list, .intro-legend { margin: 0; padding-left: 18px; }
+.intro-list li { margin: 5px 0; }
+.intro-legend { list-style: none; padding-left: 0; }
+.intro-legend li { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+.intro-legend .dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+.intro-foot { color: var(--muted); font-size: 12.5px; margin: 16px 0 0; }
+.intro-cta { display: block; width: 100%; margin-top: 16px; text-align: center; font-weight: 600; }
+.intro-body .btnlike.intro-cta { border-color: var(--accent); }
 
 /* Promotions */
 .promo-star { color: #ffd166; font-weight: 700; margin-left: 3px; }
