@@ -2,6 +2,7 @@ import { fetchJSON } from './http.js';
 import { cached } from './cache.js';
 import { toEastern } from './time.js';
 import { rememberTeam } from './teams.js';
+import { attachNHLPromos } from './promonight.js';
 
 const BASE = 'https://api-web.nhle.com/v1';
 
@@ -74,5 +75,6 @@ export async function getNHLGames(startISO, endISO) {
     if (!week.nextStartDate || week.nextStartDate <= cursor) break;
     cursor = week.nextStartDate;
   }
+  await attachNHLPromos(out);
   return out;
 }

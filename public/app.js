@@ -150,8 +150,10 @@ function chipEl(g) {
   const matchup = `${g.away.abbrev || short(g.away.name)} @ ${g.home.abbrev || short(g.home.name)}`;
   const right = g.status === 'live' ? 'LIVE' : g.status === 'final' ? 'F' : g.etTime;
   const flag = inRoadtrip(g.id) ? '<span class="trip-flag" title="On your roadtrip">🚗</span>' : '';
-  el.innerHTML = `<span class="chip-teams">${flag}${scoreTxt || matchup}</span><span class="chip-time">${right}</span>`;
-  el.title = `${g.league} · ${g.away.name} at ${g.home.name}\n${g.etWeekday || ''} ${g.etDate} · ${g.etTime} ET${g.kind ? ' · ' + g.kind : ''}${g.venue ? '\n' + g.venue : ''}`;
+  const promo = g.promos && g.promos.length ? '<span class="promo-star" title="Promotion / giveaway">*</span>' : '';
+  el.innerHTML = `<span class="chip-teams">${flag}${scoreTxt || matchup}${promo}</span><span class="chip-time">${right}</span>`;
+  el.title = `${g.league} · ${g.away.name} at ${g.home.name}\n${g.etWeekday || ''} ${g.etDate} · ${g.etTime} ET${g.kind ? ' · ' + g.kind : ''}${g.venue ? '\n' + g.venue : ''}` +
+    (g.promos && g.promos.length ? '\n★ ' + g.promos.map((p) => p.name).join('; ') : '');
   el.addEventListener('click', () => openModal(g));
   return el;
 }
@@ -306,6 +308,24 @@ function openModal(g) {
       <div class="modal-row"><span class="k">Time (ET)</span><span>${g.etTime}</span></div>
       ${g.score ? `<div class="modal-row"><span class="k">Score</span><span>${g.away.abbrev || g.away.name} ${g.score.away} – ${g.score.home} ${g.home.abbrev || g.home.name}</span></div>` : ''}
       <div class="modal-row"><span class="k">Venue</span><span>${g.venue || g.home.name + ' (home)'}</span></div>
+      ${
+        g.promos && g.promos.length
+          ? `<div class="promo-note">
+               <div class="promo-note-head">★ ${esc(g.home.name)} promotions</div>
+               <ul>${g.promos
+                 .map(
+                   (p) => `<li>
+                     <span class="promo-name">${p.icon ? esc(p.icon) + ' ' : ''}${esc(p.name)}</span>${
+                     p.type ? ` <span class="promo-type">${esc(p.type)}</span>` : ''
+                   }${p.whileSuppliesLast ? ' <span class="promo-type">while supplies last</span>' : ''}
+                     ${p.description ? `<span class="promo-desc">${esc(p.description)}</span>` : ''}
+                     ${p.presentedBy ? `<span class="promo-desc">Presented by ${esc(p.presentedBy)}</span>` : ''}
+                   </li>`
+                 )
+                 .join('')}</ul>
+             </div>`
+          : ''
+      }
       ${statusBadge}
       <label class="trip-toggle">
         <input type="checkbox" id="tripCb" ${inRoadtrip(g.id) ? 'checked' : ''} />
@@ -332,6 +352,7 @@ function openDayModal(dateIso, games) {
         <input type="checkbox" ${inRoadtrip(g.id) ? 'checked' : ''} title="Add to roadtrip" />
         <button class="linklike">${g.away.abbrev || g.away.name} @ ${g.home.abbrev || g.home.name}</button>
         <span style="color:var(--muted)">· ${g.league}</span>
+        ${g.promos && g.promos.length ? '<span class="promo-star" title="Promotion / giveaway">*</span>' : ''}
       </span>
       <span>${result}</span>`;
     row.querySelector('input').addEventListener('change', () => toggleRoadtrip(g));
@@ -348,11 +369,12 @@ const esc = (s) =>
   String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 function tripItineraryText(games) {
-  const lines = ['🚗 HOCKEY ROADTRIP', ''];
+  const lines = ['🚗 ROADTRIP', ''];
   games.forEach((g, i) => {
     lines.push(`${i + 1}. ${g.away.name} @ ${g.home.name}  (${g.league}${g.kind ? ' · ' + g.kind : ''})`);
     lines.push(`   ${g.etWeekday ? g.etWeekday + ' ' : ''}${g.etDate} · ${g.etTime} ET`);
     lines.push(`   ${g.venue || g.home.name + ' (home arena)'}`);
+    for (const p of g.promos || []) lines.push(`   * ${p.name}${p.type ? ` (${p.type})` : ''}`);
     if (g.score) lines.push(`   Result: ${g.away.name} ${g.score.away} – ${g.score.home} ${g.home.name}`);
     if (i < games.length - 1) {
       lines.push(`   ↓ drive: ${mapsRouteUrl([mapPlace(g), mapPlace(games[i + 1])])}`);
@@ -393,6 +415,7 @@ function renderRoadtrip() {
       </div>
       <div class="trip-meta">${g.league}${g.kind ? ' · ' + g.kind : ''} &nbsp;•&nbsp; ${g.etWeekday ? g.etWeekday + ', ' : ''}${g.etDate} &nbsp;•&nbsp; ${g.etTime} ET</div>
       <div class="trip-meta">📍 ${esc(g.venue || g.home.name + ' (home arena)')}</div>
+      ${(g.promos || []).map((p) => `<div class="trip-meta promo">★ ${esc(p.name)}${p.type ? ` <span class="promo-type">${esc(p.type)}</span>` : ''}</div>`).join('')}
       ${g.score ? `<div class="trip-meta">Result: ${esc(g.away.name)} ${g.score.away} – ${g.score.home} ${esc(g.home.name)}</div>` : ''}
     </li>`;
     if (i < games.length - 1) {

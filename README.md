@@ -5,6 +5,24 @@ A monthly calendar showing **NHL, AHL, ECHL, NCAA Division I men's** hockey and
 from the sidebar, page month to month, and see every start time converted to
 **US Eastern**.
 
+## Promotions
+
+Games with a home-team promotion (giveaway, theme night, fireworks, …) are marked
+with a **`*`** on the calendar; the game detail popup lists each promotion with its
+type, and they carry through to the roadtrip itinerary.
+
+Two leagues are covered:
+
+- **MLB** — the Stats API's official per-game promotions feed (`hydrate=game(promotions)`).
+- **NHL** — scraped from [getpromonight.com](https://www.getpromonight.com/nhl),
+  which aggregates promos from official team announcements. One page per club; the
+  server pulls the embedded `promos` list, caches it 12 h, and matches entries to
+  home games by date + opponent. Only *upcoming* promos are published, so past
+  games show none.
+
+AHL, ECHL and NCAA have no usable source (no API, and no aggregator with coverage),
+so they have no promo markers.
+
 ## Roadtrip planner
 
 Open any game and tick **🚗 Add this game to my roadtrip** (also available from the
@@ -58,7 +76,8 @@ feeds, then serves a dependency-free vanilla-JS front end (`public/`).
 | AHL | HockeyTech / LeagueStat feed (`lscluster.hockeytech.com`, `client_code=ahl`) |
 | ECHL | HockeyTech / LeagueStat feed (`client_code=echl`) |
 | NCAA D1 men | `sdataprod.ncaa.com` GraphQL (the feed ncaa.com's own scoreboard uses) |
-| MLB | `statsapi.mlb.com` Stats API (`sportId=1`) |
+| MLB | `statsapi.mlb.com` Stats API (`sportId=1`, `hydrate=game(promotions)`) |
+| NHL promos | `getpromonight.com/nhl/<team>` (scraped; hockey has no promo API) |
 
 Every feed gives a UTC instant (or an offset-aware timestamp); the server
 converts each one to America/New_York with `Intl.DateTimeFormat` and returns both
@@ -87,5 +106,7 @@ the current NHL (32) and MLB (30) rosters are seeded at startup.
 - NCAA coverage is Division I men only. MLB includes spring training and
   postseason; unresolved postseason bracket slots ("AL #1 Seed" etc.) are hidden
   until the matchup is set.
+- NHL promos are scraped HTML — the loader in `server/lib/promonight.js` is the
+  place to adjust if getpromonight.com changes its page structure or team slugs.
 - This relies on undocumented public feeds; if one changes shape, that league's
   loader in `server/lib/` is the place to adjust.

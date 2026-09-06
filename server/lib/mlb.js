@@ -71,6 +71,16 @@ function normalize(g, teamMap) {
   if (KIND[g.gameType]) parts.push(KIND[g.gameType]);
   if (g.doubleHeader && g.doubleHeader !== 'N') parts.push(`Game ${g.gameNumber || 1}`);
 
+  // Home-team promotional schedule (giveaways, theme nights, fireworks, …).
+  const seen = new Set();
+  const promos = [];
+  for (const p of g.promotions || []) {
+    const name = (p.name || '').trim();
+    if (!name || seen.has(name)) continue;
+    seen.add(name);
+    promos.push({ name, type: p.offerType || null });
+  }
+
   return {
     id: `mlb-${g.gamePk}`,
     league: 'MLB',
@@ -84,6 +94,7 @@ function normalize(g, teamMap) {
     away,
     score: hasScore ? { home: hs, away: as } : null,
     venue: g.venue?.name || null,
+    promos,
   };
 }
 
@@ -92,7 +103,10 @@ export async function getMLBGames(startISO, endISO) {
   const data = await cached(
     `mlb:sched:${startISO}:${endISO}`,
     10 * 60 * 1000,
-    () => fetchJSON(`${BASE}/schedule?sportId=1&startDate=${startISO}&endDate=${endISO}`)
+    () =>
+      fetchJSON(
+        `${BASE}/schedule?sportId=1&startDate=${startISO}&endDate=${endISO}&hydrate=game(promotions)`
+      )
   );
   const out = [];
   for (const day of data?.dates || []) {
