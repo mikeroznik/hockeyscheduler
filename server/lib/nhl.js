@@ -78,3 +78,13 @@ export async function getNHLGames(startISO, endISO) {
   await attachNHLPromos(out);
   return out;
 }
+
+// A single team's entire published season (preseason + regular + any playoffs so
+// far) in one request — used by the roadtrip planner so it can look past a fixed
+// day horizon to the end of the season.
+export async function getNHLTeamSeasonGames(abbrev) {
+  return cached(`nhl:teamseason:${abbrev}`, 6 * 60 * 60 * 1000, async () => {
+    const data = await fetchJSON(`${BASE}/club-schedule-season/${abbrev}/now`);
+    return (data.games || []).map(normalizeGame);
+  });
+}

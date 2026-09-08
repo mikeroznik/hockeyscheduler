@@ -99,6 +99,11 @@ function gameVisible(g) {
   return homeOn || awayOn;
 }
 
+// A game where one of the currently-checked teams is playing at home.
+function homeTeamSelected(g) {
+  return state.leaguesOn[g.league] && !state.teamsOff.has(g.home.id);
+}
+
 /* ---------- roadtrip ---------- */
 function inRoadtrip(id) { return state.roadtrip.has(id); }
 
@@ -145,7 +150,10 @@ function renderWeekdays() {
 
 function chipEl(g) {
   const el = document.createElement('div');
-  el.className = `chip ${g.league} ${g.status}` + (inRoadtrip(g.id) ? ' in-trip' : '');
+  el.className =
+    `chip ${g.league} ${g.status}` +
+    (inRoadtrip(g.id) ? ' in-trip' : '') +
+    (homeTeamSelected(g) ? ' home-pick' : '');
   const scoreTxt = g.score ? `${g.away.abbrev || short(g.away.name)} ${g.score.away} – ${g.home.abbrev || short(g.home.name)} ${g.score.home}` : null;
   const matchup = `${g.away.abbrev || short(g.away.name)} @ ${g.home.abbrev || short(g.home.name)}`;
   const right = g.status === 'live' ? 'LIVE' : g.status === 'final' ? 'F' : g.etTime;

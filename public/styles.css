@@ -154,6 +154,7 @@ body.planner-mode .toggle-filters { display: none; }
   gap: 6px;
 }
 .chip:hover { filter: brightness(1.15); }
+.chip.home-pick .chip-teams { font-weight: 700; }
 .chip .chip-time { color: var(--muted); flex-shrink: 0; }
 .chip.final .chip-time { color: var(--text); }
 .chip.live { box-shadow: 0 0 0 1px #e05656 inset; }

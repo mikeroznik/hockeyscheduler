@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getNHLGames } from './lib/nhl.js';
+import { getNHLGames, getNHLTeamSeasonGames } from './lib/nhl.js';
 import { getHockeyTechGames } from './lib/hockeytech.js';
 import { getNCAAGames } from './lib/ncaa.js';
 import { getMLBGames, getMLBTeamMap } from './lib/mlb.js';
@@ -101,8 +101,10 @@ export function createApp() {
 
   // RoadTrip planner: find every minimal way to catch all of `teams` within a
   // window of `days` consecutive days, searching forward from `start` (default
-  // today) over a fixed horizon.
-  const PLANNER_HORIZON_DAYS = 90;
+  // today) through the rest of the season. NHL is pulled per team as a full-season
+  // schedule; the other leagues get a wide window that comfortably covers a season
+  // plus playoffs from any in-season start.
+  const PLANNER_HORIZON_DAYS = 300;
   app.get('/api/roadtrip', async (req, res) => {
     warmup();
     const teamIds = String(req.query.teams || '')
@@ -124,26 +126,43 @@ export function createApp() {
         .status(400)
         .json({ error: `${teamIds.length} teams need at least a ${teamIds.length}-day trip.` });
 
-    const end = addDaysISO(start, PLANNER_HORIZON_DAYS);
-    const leagues = [...new Set(teamIds.map((id) => id.split(':')[0]))].filter((l) =>
-      ALL_LEAGUES.includes(l)
-    );
+    const horizonEnd = addDaysISO(start, PLANNER_HORIZON_DAYS);
+    const byLeague = {};
+    for (const id of teamIds) (byLeague[id.split(':')[0]] ||= []).push(id);
 
-    const settled = await Promise.allSettled(leagues.map((l) => LEAGUE_LOADERS[l](start, end)));
+    // NHL: one full-season fetch per selected team (goes to the end of the season,
+    // past any day horizon). Other leagues: wide window from the loader.
+    const tasks = [];
+    for (const [lg, ids] of Object.entries(byLeague)) {
+      if (lg === 'NHL') {
+        for (const id of ids) tasks.push([lg, getNHLTeamSeasonGames(id.split(':')[1])]);
+      } else if (ALL_LEAGUES.includes(lg)) {
+        tasks.push([lg, LEAGUE_LOADERS[lg](start, horizonEnd)]);
+      }
+    }
+
+    const settled = await Promise.allSettled(tasks.map((t) => t[1]));
     const games = [];
     const errors = {};
     settled.forEach((r, i) => {
+      const lg = tasks[i][0];
       if (r.status === 'fulfilled') games.push(...r.value);
-      else errors[leagues[i]] = r.reason?.message || 'failed';
+      else errors[lg] = r.reason?.message || 'failed';
     });
 
     const selected = new Set(teamIds);
-    const relevant = games.filter((g) => selected.has(g.home.id)); // home games only
+    // Home games from `start` onward — no upper bound, so the search runs to the
+    // last game the feeds have.
+    const relevant = games.filter((g) => g.etDate >= start && selected.has(g.home.id));
     const { itineraries, truncated } = planRoadtrips(relevant, teamIds, days, { cap: 200, strict });
+
+    const lastGameDate = relevant.length
+      ? relevant.reduce((m, g) => (g.etDate > m ? g.etDate : m), start)
+      : horizonEnd;
 
     const known = allTeams();
     res.json({
-      searched: { start, end, days, strict, horizonDays: PLANNER_HORIZON_DAYS },
+      searched: { start, end: lastGameDate, days, strict },
       teams: teamIds.map((id) => known.find((t) => t.id === id) || { id, name: id, league: id.split(':')[0] }),
       count: itineraries.length,
       truncated,

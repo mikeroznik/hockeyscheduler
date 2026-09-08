@@ -510,6 +510,12 @@
     "abbrev": "NYY"
   },
   {
+    "id": "MLB:343",
+    "league": "MLB",
+    "name": "Northeastern Huskies",
+    "abbrev": ""
+  },
+  {
     "id": "MLB:PHI",
     "league": "MLB",
     "name": "Philadelphia Phillies",
@@ -520,6 +526,12 @@
     "league": "MLB",
     "name": "Pittsburgh Pirates",
     "abbrev": "PIT"
+  },
+  {
+    "id": "MLB:105",
+    "league": "MLB",
+    "name": "Sacramento River Cats",
+    "abbrev": ""
   },
   {
     "id": "MLB:SD",

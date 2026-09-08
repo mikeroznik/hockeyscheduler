@@ -3,7 +3,8 @@
 A monthly calendar showing **NHL, AHL, ECHL, NCAA Division I men's** hockey and
 **MLB** schedules for every team. Toggle whole leagues or individual teams on/off
 from the sidebar, page month to month, and see every start time converted to
-**US Eastern**.
+**US Eastern**. A matchup is shown in **bold** when one of the ticked teams is the
+home team.
 
 First-time visitors get a one-time "how it works" overlay (stored in `localStorage`
 as `hsc-intro-seen`); the **?** button in the header reopens it anytime.
@@ -43,12 +44,14 @@ legs route to `"<school> hockey arena"`.
 
 Same team list as the calendar, but everything defaults **off**. Pick 2+ teams,
 choose a trip length (2–20 days) and a start date, and hit **Plan trips**. The
-server (`GET /api/roadtrip`) loads those teams' games over the next 90 days and
-[`server/lib/roadtrip.js`](server/lib/roadtrip.js) enumerates every itinerary — one
-**home game per selected team**, each on a separate calendar day, all fitting inside
-a single window of the chosen length. Away games are ignored, so each itinerary has
-exactly one game per team. Each result lists the games, venues, and which team each
-one is for, with a Google Maps route, and can be pushed into the roadtrip itinerary
+server (`GET /api/roadtrip`) loads those teams' games from the start date **to the
+end of the schedule** — NHL as a per-team full-season fetch, the others over a wide
+window — and [`server/lib/roadtrip.js`](server/lib/roadtrip.js) enumerates every
+itinerary — one **home game per selected team**, each on a separate calendar day,
+all fitting inside a single window of the chosen length. Away games are ignored, so
+each itinerary has exactly one game per team. Each result lists the games, venues,
+and which team each one is for, with a Google Maps route, and can be pushed into the
+roadtrip itinerary
 above with one click.
 
 **Visit in this exact order** (`&strict=1`): when ticked, the picked teams become an
@@ -115,8 +118,8 @@ the Eastern date and the Eastern clock time. Games with no confirmed time show
 - `GET /api/teams` returns the accumulated team registry.
 - `GET /api/roadtrip?teams=NHL:EDM,NHL:CGY,AHL:CGY&days=4[&start=YYYY-MM-DD][&strict=1]`
   returns `{ searched, teams, count, truncated, itineraries, errors }` — every way
-  to catch each team at a home game within a `days`-day window over the next 90 days
-  (`strict=1` requires the `teams` order).
+  to catch each team at a home game within a `days`-day window, from `start` through
+  the end of the available schedule (`strict=1` requires the `teams` order).
 
 ### Caching
 
