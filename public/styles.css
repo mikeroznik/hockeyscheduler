@@ -45,6 +45,18 @@ button:hover { border-color: var(--accent); }
 }
 .app-header h1 { font-size: 18px; margin: 0; }
 
+.tabs { display: flex; gap: 4px; }
+.tab {
+  background: transparent; border: 1px solid transparent; border-radius: 7px;
+  padding: 6px 12px; color: var(--muted); font-weight: 600;
+}
+.tab:hover { color: var(--text); border-color: var(--border); }
+.tab.is-active { color: var(--text); background: var(--panel-2); border-color: var(--border); }
+
+body.planner-mode .month-nav,
+body.planner-mode .status,
+body.planner-mode .toggle-filters { display: none; }
+
 .month-nav { display: flex; align-items: center; gap: 8px; }
 .month-nav #monthLabel { min-width: 170px; text-align: center; font-weight: 600; font-size: 15px; }
 .month-nav button { min-width: 34px; }
@@ -327,6 +339,112 @@ input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px;
 .trip-leg a { color: var(--accent); font-size: 12.5px; text-decoration: none; }
 .trip-leg a:hover { text-decoration: underline; }
 
+/* ===== RoadTrip Planner tab ===== */
+.planner-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 16px;
+  padding: 16px;
+  align-items: start;
+}
+.planner-main { min-width: 0; }
+.planner-side {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+}
+.planner-controls { margin-bottom: 12px; }
+.pc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pc-grid label { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--muted); }
+.pc-grid select, .pc-grid input[type="date"] {
+  font: inherit; color: var(--text);
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px;
+}
+.plan-btn {
+  width: 100%; margin-top: 10px; padding: 9px 0;
+  font-weight: 700; border-color: var(--accent); background: var(--panel-2);
+}
+.plan-btn:hover:not(:disabled) { background: var(--accent); color: #fff; }
+.plan-btn:disabled { opacity: .5; cursor: default; }
+.planner-msg { margin-top: 6px; font-size: 12.5px; color: var(--echl); min-height: 1em; }
+
+.pc-strict {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 10px; font-size: 13px; cursor: pointer;
+}
+
+.planner-chosen { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; align-items: center; }
+.chosen-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px;
+  padding: 2px 4px 2px 8px; font-size: 12px;
+}
+.chosen-chip .x { cursor: pointer; color: var(--muted); font-size: 14px; padding: 0 2px; }
+.chosen-chip .x:hover { color: #ff8a8a; }
+.chosen-clear { padding: 2px 8px; font-size: 11px; }
+
+/* strict-order mode: numbered rows with move controls */
+.planner-chosen.ordered { flex-direction: column; align-items: stretch; }
+.planner-chosen.ordered .chosen-chip {
+  border-radius: 7px; justify-content: flex-start; padding: 4px 6px 4px 4px; gap: 6px;
+}
+.chosen-chip .ord {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 999px; flex-shrink: 0;
+  background: var(--accent); color: #fff; font-size: 11px; font-weight: 700;
+}
+.planner-chosen.ordered .chosen-chip .x { margin-left: auto; }
+.chosen-chip .mv {
+  background: none; border: 1px solid var(--border); color: var(--muted);
+  border-radius: 4px; font-size: 9px; line-height: 1; padding: 2px 4px; cursor: pointer;
+}
+.chosen-chip .mv:hover:not(:disabled) { border-color: var(--accent); color: var(--text); }
+.chosen-chip .mv:disabled { opacity: .3; cursor: default; }
+.planner-chosen.ordered .chosen-clear { align-self: flex-start; margin-top: 2px; }
+
+.planner-empty {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+  padding: 22px; color: var(--muted); max-width: 640px;
+}
+.planner-empty h2 { margin: 0 0 8px; color: var(--text); font-size: 18px; }
+.planner-empty p { margin: 0; line-height: 1.55; }
+
+.itin-summary {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 12px; line-height: 1.5;
+}
+.itin-list { display: flex; flex-direction: column; gap: 10px; }
+.itin { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.itin-head {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: 9px 12px; background: var(--panel-2); border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.itin-actions { display: flex; gap: 6px; }
+.itin-actions .btnlike { padding: 4px 9px; font-size: 12.5px; }
+.itin-legs { list-style: none; margin: 0; padding: 6px 12px 10px; counter-reset: leg; }
+.itin-legs li {
+  display: grid; grid-template-columns: 92px 1fr auto; gap: 10px; align-items: center;
+  padding: 6px 0; border-bottom: 1px solid var(--border);
+}
+.itin-legs li:last-child { border-bottom: none; }
+.leg-date { font-size: 12px; color: var(--muted); font-weight: 600; }
+.leg-mid { min-width: 0; }
+.leg-match { display: flex; align-items: center; gap: 6px; font-weight: 600; }
+.leg-match .dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+.leg-sub { display: block; color: var(--muted); font-size: 11.5px; margin-top: 1px; }
+.leg-cov { display: flex; gap: 3px; flex-wrap: wrap; justify-content: flex-end; }
+.cov {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .02em;
+  border: 1px solid var(--accent); color: var(--text);
+  border-radius: 4px; padding: 1px 5px; white-space: nowrap;
+}
+
 @media (max-width: 860px) {
   .layout { grid-template-columns: 1fr; }
   .toggle-filters { display: inline-block; }
@@ -335,4 +453,9 @@ input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px;
   .calendar-inner { min-width: 680px; }
   .day-cell { min-height: 92px; }
   .month-nav #monthLabel { min-width: 130px; font-size: 14px; }
+
+  .planner-layout { grid-template-columns: 1fr; }
+  .planner-side { position: static; max-height: none; order: -1; }
+  .itin-legs li { grid-template-columns: 1fr auto; }
+  .leg-date { grid-column: 1 / -1; }
 }

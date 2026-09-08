@@ -26,15 +26,34 @@ Two leagues are covered:
 AHL, ECHL and NCAA have no usable source (no API, and no aggregator with coverage),
 so they have no promo markers.
 
-## Roadtrip planner
+## Roadtrips
+
+Two tabs at the top: **Calendar** (the month view) and **RoadTrip Planning**.
+
+### Build your own (Calendar)
 
 Open any game and tick **🚗 Add this game to my roadtrip** (also available from the
-"+N more" day list). The **Roadtrip** button in the header (next to Today) opens an
-itinerary of the selected games in chronological order — league, date/time ET,
-venue, and result — with a Google Maps directions link between each arena and one
-"open full route" link for the whole trip. The selection is saved in the browser,
-so it survives reloads and browsing to other months. NCAA games have no venue in
-the feed, so those legs route to `"<school> hockey arena"`.
+"+N more" day list). The **Roadtrip** button in the header opens an itinerary of the
+selected games in chronological order — league, date/time ET, venue, result — with a
+Google Maps directions link between each arena and one "open full route" link. The
+selection is saved in the browser. NCAA games have no venue in the feed, so those
+legs route to `"<school> hockey arena"`.
+
+### RoadTrip Planning tab
+
+Same team list as the calendar, but everything defaults **off**. Pick 2+ teams,
+choose a trip length (2–20 days) and a start date, and hit **Plan trips**. The
+server (`GET /api/roadtrip`) loads those teams' games over the next 90 days and
+[`server/lib/roadtrip.js`](server/lib/roadtrip.js) enumerates every itinerary — one
+**home game per selected team**, each on a separate calendar day, all fitting inside
+a single window of the chosen length. Away games are ignored, so each itinerary has
+exactly one game per team. Each result lists the games, venues, and which team each
+one is for, with a Google Maps route, and can be pushed into the roadtrip itinerary
+above with one click.
+
+**Visit in this exact order** (`&strict=1`): when ticked, the picked teams become an
+ordered list (drag-free ▲▼ reordering on the chips) and only itineraries whose home
+games fall in that sequence are returned.
 
 ## Running
 
@@ -94,6 +113,10 @@ the Eastern date and the Eastern clock time. Games with no confirmed time show
   so if one feed is down the others still render and the failing league is listed
   in `errors`.
 - `GET /api/teams` returns the accumulated team registry.
+- `GET /api/roadtrip?teams=NHL:EDM,NHL:CGY,AHL:CGY&days=4[&start=YYYY-MM-DD][&strict=1]`
+  returns `{ searched, teams, count, truncated, itineraries, errors }` — every way
+  to catch each team at a home game within a `days`-day window over the next 90 days
+  (`strict=1` requires the `teams` order).
 
 ### Caching
 

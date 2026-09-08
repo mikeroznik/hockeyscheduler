@@ -508,7 +508,331 @@ function shiftMonth(delta) {
   go();
 }
 
+/* ================= RoadTrip Planner tab ================= */
+const plannerSaved = JSON.parse(localStorage.getItem('hsc-planner') || '{}');
+const planner = {
+  selected: [...new Set(plannerSaved.selected || [])], // ordered list of team ids
+  days: plannerSaved.days || 4,
+  start: plannerSaved.start || '',
+  strictOrder: !!plannerSaved.strictOrder,
+  expanded: new Set(plannerSaved.expanded || []),
+  lastResult: null,
+};
+function persistPlanner() {
+  localStorage.setItem(
+    'hsc-planner',
+    JSON.stringify({
+      selected: planner.selected,
+      days: planner.days,
+      start: planner.start,
+      strictOrder: planner.strictOrder,
+      expanded: [...planner.expanded],
+    })
+  );
+}
+const selHas = (id) => planner.selected.includes(id);
+function selAdd(id) { if (!selHas(id)) planner.selected.push(id); }
+function selDel(id) { planner.selected = planner.selected.filter((x) => x !== id); }
+function selMove(id, dir) {
+  const i = planner.selected.indexOf(id);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= planner.selected.length) return;
+  [planner.selected[i], planner.selected[j]] = [planner.selected[j], planner.selected[i]];
+}
+
+let activeTab = localStorage.getItem('hsc-tab') === 'planner' ? 'planner' : 'calendar';
+
+function switchTab(name) {
+  activeTab = name;
+  try { localStorage.setItem('hsc-tab', name); } catch {}
+  $('tabCalendar').classList.toggle('is-active', name === 'calendar');
+  $('tabPlanner').classList.toggle('is-active', name === 'planner');
+  $('calendarView').hidden = name !== 'calendar';
+  $('plannerView').hidden = name !== 'planner';
+  document.body.classList.toggle('planner-mode', name === 'planner');
+  if (name === 'planner') {
+    renderPlannerTeams();
+    if (planner.lastResult) renderItineraries(planner.lastResult);
+  }
+}
+
+function initPlannerControls() {
+  const sel = $('plannerDays');
+  for (let d = 2; d <= 20; d++) {
+    const o = document.createElement('option');
+    o.value = String(d);
+    o.textContent = `${d} days`;
+    if (d === planner.days) o.selected = true;
+    sel.appendChild(o);
+  }
+  sel.addEventListener('change', () => { planner.days = +sel.value; persistPlanner(); });
+
+  const start = $('plannerStart');
+  const today = etTodayISO();
+  start.min = today;
+  if (!planner.start || planner.start < today) planner.start = today;
+  start.value = planner.start;
+  start.addEventListener('change', () => {
+    planner.start = start.value || today;
+    persistPlanner();
+  });
+
+  const strict = $('plannerStrict');
+  strict.checked = planner.strictOrder;
+  strict.addEventListener('change', () => {
+    planner.strictOrder = strict.checked;
+    persistPlanner();
+    renderPlannerChosen();
+  });
+
+  $('plannerPlan').addEventListener('click', runPlan);
+}
+
+function renderPlannerChosen() {
+  const box = $('plannerChosen');
+  const ids = planner.selected;
+  if (!ids.length) {
+    box.innerHTML = '<span class="hint">No teams selected yet</span>';
+    return;
+  }
+  const strict = planner.strictOrder;
+  box.classList.toggle('ordered', strict);
+  box.innerHTML =
+    ids
+      .map((id, i) => {
+        const t = teamsById.get(id);
+        const label = t ? `${t.league} ${nickname(t.name)}` : id;
+        const reorder = strict
+          ? `<button class="mv" data-mv="up" ${i === 0 ? 'disabled' : ''} aria-label="earlier">▲</button>
+             <button class="mv" data-mv="down" ${i === ids.length - 1 ? 'disabled' : ''} aria-label="later">▼</button>`
+          : '';
+        return `<span class="chosen-chip" data-id="${id}" title="${t ? t.name : id}">${
+          strict ? `<span class="ord">${i + 1}</span>` : ''
+        }${label}${reorder}<span class="x">×</span></span>`;
+      })
+      .join('') + '<button class="chosen-clear" id="chosenClear">clear all</button>';
+
+  box.querySelectorAll('.chosen-chip').forEach((chip) => {
+    const id = chip.dataset.id;
+    chip.querySelector('.x').addEventListener('click', () => {
+      selDel(id);
+      persistPlanner();
+      renderPlannerTeams();
+    });
+    chip.querySelectorAll('.mv').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        selMove(id, btn.dataset.mv === 'up' ? -1 : 1);
+        persistPlanner();
+        renderPlannerChosen();
+      })
+    );
+  });
+  $('chosenClear').addEventListener('click', () => {
+    planner.selected = [];
+    persistPlanner();
+    renderPlannerTeams();
+  });
+}
+
+function renderPlannerTeams() {
+  renderPlannerChosen();
+  const list = $('plannerFilterList');
+  list.innerHTML = '';
+  for (const league of LEAGUES) {
+    const teams = teamsForLeague(league);
+    const block = document.createElement('div');
+    block.className = 'league-block';
+    const selN = () => teams.filter((t) => selHas(t.id)).length;
+
+    const row = document.createElement('div');
+    row.className = 'league-row';
+    row.innerHTML = `
+      <span class="swatch" style="background:${LEAGUE_COLOR[league]}"></span>
+      <span class="league-name">${league}</span>
+      <span class="count">${selN() ? selN() + ' picked' : ''}</span>
+      <span class="caret">${planner.expanded.has(league) ? '▾' : '▸'}</span>`;
+    const toggle = () => {
+      if (planner.expanded.has(league)) planner.expanded.delete(league);
+      else planner.expanded.add(league);
+      persistPlanner();
+      renderPlannerTeams();
+    };
+    row.querySelector('.caret').addEventListener('click', toggle);
+    row.querySelector('.league-name').addEventListener('click', toggle);
+    block.appendChild(row);
+
+    const tl = document.createElement('div');
+    tl.className = 'team-list' + (planner.expanded.has(league) ? ' open' : '');
+    if (planner.expanded.has(league)) {
+      if (!teams.length) {
+        tl.innerHTML = '<div class="hint">Team list still loading…</div>';
+      } else {
+        const bulk = document.createElement('div');
+        bulk.className = 'bulk';
+        bulk.innerHTML = '<button data-all>All</button><button data-none>None</button>';
+        bulk.querySelector('[data-all]').addEventListener('click', () => {
+          teams.forEach((t) => selAdd(t.id));
+          persistPlanner();
+          renderPlannerTeams();
+        });
+        bulk.querySelector('[data-none]').addEventListener('click', () => {
+          teams.forEach((t) => selDel(t.id));
+          persistPlanner();
+          renderPlannerTeams();
+        });
+        tl.appendChild(bulk);
+        for (const t of teams) {
+          const item = document.createElement('div');
+          item.className = 'team-item';
+          const cid = `p_${btoa(t.id).replace(/=/g, '')}`;
+          item.innerHTML = `<input type="checkbox" id="${cid}" ${
+            selHas(t.id) ? 'checked' : ''
+          }/><label for="${cid}">${t.name}</label>`;
+          item.querySelector('input').addEventListener('change', (e) => {
+            if (e.target.checked) selAdd(t.id);
+            else selDel(t.id);
+            persistPlanner();
+            renderPlannerChosen();
+            row.querySelector('.count').textContent = selN() ? selN() + ' picked' : '';
+          });
+          tl.appendChild(item);
+        }
+      }
+    }
+    block.appendChild(tl);
+    list.appendChild(block);
+  }
+}
+
+function nickname(name) {
+  if (!name) return '';
+  const w = name.trim().split(/\s+/);
+  const last = w[w.length - 1].replace(/\.$/, '');
+  return last.length >= 3 || w.length === 1 ? last : w.slice(-2).join(' ');
+}
+
+function fmtDay(isoDate) {
+  const [y, mo, d] = isoDate.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, mo - 1, d));
+  return `${WEEKDAYS[dt.getUTCDay()]} ${MONTHS[mo - 1].slice(0, 3)} ${d}`;
+}
+
+async function runPlan() {
+  const msg = $('plannerMsg');
+  const ids = planner.selected;
+  if (ids.length < 2) { msg.textContent = 'Pick at least 2 teams.'; return; }
+  if (ids.length > planner.days) {
+    msg.textContent = `${ids.length} teams need at least a ${ids.length}-day trip.`;
+    return;
+  }
+  msg.textContent = 'Searching the schedule…';
+  $('plannerPlan').disabled = true;
+  const params = new URLSearchParams({
+    teams: ids.join(','),
+    days: String(planner.days),
+    start: planner.start || etTodayISO(),
+  });
+  if (planner.strictOrder) params.set('strict', '1');
+  try {
+    const res = await fetch('/api/roadtrip?' + params);
+    const data = await res.json();
+    if (!res.ok) {
+      msg.textContent = data.error || `Error ${res.status}`;
+      return;
+    }
+    planner.lastResult = data;
+    msg.textContent = '';
+    renderItineraries(data);
+  } catch (err) {
+    msg.textContent = 'Request failed: ' + err.message;
+  } finally {
+    $('plannerPlan').disabled = false;
+  }
+}
+
+function renderItineraries(data) {
+  const wrap = $('plannerResults');
+  const errs = Object.keys(data.errors || {});
+  const errLine = errs.length
+    ? `<div class="error-banner" style="border-radius:8px;margin-bottom:10px">Couldn't load: ${errs.join(', ')}</div>`
+    : '';
+
+  const orderNote = data.searched.strict ? ' <strong>in that exact order</strong>' : '';
+  if (!data.itineraries.length) {
+    wrap.innerHTML =
+      errLine +
+      `<div class="planner-empty"><h2>No trips found</h2>
+       <p>No way to catch all ${data.teams.length} teams at a home game on separate days${orderNote} within
+       ${data.searched.days} days, searching ${fmtDay(data.searched.start)} – ${fmtDay(data.searched.end)}.
+       Try a longer trip, fewer teams, ${data.searched.strict ? 'a different order, ' : ''}or a later start date.</p></div>`;
+    return;
+  }
+
+  const summary = `<div class="itin-summary">
+    <strong>${data.count}${data.truncated ? '+' : ''} option${data.count === 1 ? '' : 's'}</strong>
+    to catch ${data.teams.map((t) => t.name).join(data.searched.strict ? ' → ' : ', ')} at home on separate days${orderNote} within
+    ${data.searched.days} days · searching ${fmtDay(data.searched.start)} – ${fmtDay(data.searched.end)}
+    ${data.truncated ? `<div class="hint">Showing the first ${data.count}; narrow the start date or teams for fewer.</div>` : ''}
+  </div>`;
+
+  const cards = data.itineraries
+    .map((it, i) => {
+      const route = mapsRouteUrl(it.games.map(mapPlace).slice(0, 10));
+      const legs = it.games
+        .map((g) => {
+          const cov = g.covers
+            .map((cid) => {
+              const t = data.teams.find((x) => x.id === cid) || {};
+              return `<span class="cov" title="${t.name || cid}">${nickname(t.name) || cid}</span>`;
+            })
+            .join('');
+          return `<li>
+            <span class="leg-date">${fmtDay(g.etDate)}</span>
+            <span class="leg-mid">
+              <span class="leg-match"><span class="dot" style="background:${LEAGUE_COLOR[g.league]}"></span>${
+                g.away.abbrev || g.away.name
+              } @ ${g.home.abbrev || g.home.name}</span>
+              <span class="leg-sub">${g.league}${g.kind ? ' · ' + g.kind : ''} · ${g.etTime} ET · ${
+                g.venue || g.home.name
+              }</span>
+            </span>
+            <span class="leg-cov">${cov}</span>
+          </li>`;
+        })
+        .join('');
+      return `<div class="itin">
+        <div class="itin-head">
+          <span><strong>${fmtDay(it.startDate)} – ${fmtDay(it.endDate)}</strong>
+            <span class="hint">· ${it.spanDays} day${it.spanDays === 1 ? '' : 's'} · ${it.games.length} game${
+              it.games.length === 1 ? '' : 's'
+            }</span></span>
+          <span class="itin-actions">
+            <a class="btnlike" href="${route}" target="_blank" rel="noopener">🗺️ Route</a>
+            <button class="btnlike itin-add" data-i="${i}">＋ Roadtrip</button>
+          </span>
+        </div>
+        <ol class="itin-legs">${legs}</ol>
+      </div>`;
+    })
+    .join('');
+
+  wrap.innerHTML = errLine + summary + `<div class="itin-list">${cards}</div>`;
+  wrap.querySelectorAll('.itin-add').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      for (const g of data.itineraries[+btn.dataset.i].games) state.roadtrip.set(g.id, g);
+      persist();
+      updateRoadtripBtn();
+      renderCalendar(currentGames);
+      btn.textContent = '✓ Added';
+      btn.disabled = true;
+    })
+  );
+}
+
 /* ---------- wire up ---------- */
+$('tabCalendar').addEventListener('click', () => switchTab('calendar'));
+$('tabPlanner').addEventListener('click', () => switchTab('planner'));
+initPlannerControls();
 $('prevMonth').addEventListener('click', () => shiftMonth(-1));
 $('nextMonth').addEventListener('click', () => shiftMonth(1));
 $('todayBtn').addEventListener('click', () => {
@@ -548,9 +872,14 @@ try {
 
 updateRoadtripBtn();
 renderWeekdays();
+switchTab(activeTab);
 // Pull the full known team list up front so checkboxes are populated before browsing.
 fetch('/api/teams')
   .then((r) => r.json())
-  .then((d) => { ingestTeams(d.teams || []); rerender(); })
+  .then((d) => {
+    ingestTeams(d.teams || []);
+    rerender();
+    if (activeTab === 'planner') renderPlannerTeams();
+  })
   .catch(() => {});
 go();

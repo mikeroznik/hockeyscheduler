@@ -59,7 +59,7 @@ export async function getNHLGames(startISO, endISO) {
   const seen = new Set();
   let cursor = startISO;
   let guard = 0;
-  while (cursor && cursor <= endISO && guard++ < 12) {
+  while (cursor && cursor <= endISO && guard++ < 32) {
     let week;
     try {
       week = await fetchWeek(cursor);

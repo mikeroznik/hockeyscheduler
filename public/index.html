@@ -10,6 +10,10 @@
   <body>
     <header class="app-header">
       <h1>🏒 Hockey Schedule</h1>
+      <nav class="tabs">
+        <button id="tabCalendar" class="tab is-active">Calendar</button>
+        <button id="tabPlanner" class="tab">RoadTrip Planning</button>
+      </nav>
       <div class="month-nav">
         <button id="prevMonth" aria-label="Previous month">‹</button>
         <span id="monthLabel">—</span>
@@ -24,26 +28,70 @@
       </div>
     </header>
 
-    <div id="errorBanner" class="error-banner" hidden></div>
+    <div id="calendarView">
+      <div id="errorBanner" class="error-banner" hidden></div>
 
-    <main class="layout">
-      <section class="calendar-wrap">
-        <div class="calendar-scroll">
-          <div class="calendar-inner">
-            <div class="weekday-row" id="weekdayRow"></div>
-            <div class="calendar-grid" id="calendarGrid"></div>
+      <main class="layout">
+        <section class="calendar-wrap">
+          <div class="calendar-scroll">
+            <div class="calendar-inner">
+              <div class="weekday-row" id="weekdayRow"></div>
+              <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-head">
-          <strong>Leagues &amp; Teams</strong>
-          <span class="hint">Times shown in US Eastern</span>
-        </div>
-        <div id="filterList" class="filter-list"></div>
-      </aside>
-    </main>
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-head">
+            <strong>Leagues &amp; Teams</strong>
+            <span class="hint">Times shown in US Eastern</span>
+          </div>
+          <div id="filterList" class="filter-list"></div>
+        </aside>
+      </main>
+    </div>
+
+    <div id="plannerView" hidden>
+      <main class="planner-layout">
+        <section class="planner-main">
+          <div id="plannerResults" class="planner-results">
+            <div class="planner-empty">
+              <h2>🚗 Plan a multi-team roadtrip</h2>
+              <p>Pick <strong>2 or more teams</strong> on the right, choose how many days you have,
+                and hit <strong>Plan trips</strong>. You'll get every way to catch each team at
+                <strong>a home game</strong> on a separate day within that window — each option
+                lists the games, venues, and a Google&nbsp;Maps route.</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="planner-side">
+          <div class="planner-controls">
+            <div class="pc-grid">
+              <label>Trip length
+                <select id="plannerDays"></select>
+              </label>
+              <label>Start from
+                <input type="date" id="plannerStart" />
+              </label>
+            </div>
+            <label class="pc-strict">
+              <input type="checkbox" id="plannerStrict" />
+              Visit the teams in this exact order
+            </label>
+            <div id="plannerChosen" class="planner-chosen"></div>
+            <button id="plannerPlan" class="plan-btn">Plan trips</button>
+            <div id="plannerMsg" class="planner-msg"></div>
+          </div>
+
+          <div class="sidebar-head">
+            <strong>Teams to catch</strong>
+            <span class="hint">all off &mdash; tick the teams you want to see</span>
+          </div>
+          <div id="plannerFilterList" class="filter-list"></div>
+        </aside>
+      </main>
+    </div>
 
     <div id="introModal" class="modal" hidden>
       <div class="modal-card intro-card">
@@ -64,7 +112,15 @@
             <li><span class="dot" style="background:var(--mlb)"></span> <strong>MLB</strong> — incl. spring training &amp; postseason</li>
           </ul>
 
-          <h3>Getting around</h3>
+          <h3>Two tabs</h3>
+          <ul class="intro-list">
+            <li><strong>Calendar</strong> — the month view described here.</li>
+            <li><strong>RoadTrip Planning</strong> — pick several teams and a number of days,
+              and it finds every way to catch each of them at a home game on a separate day
+              within that window. Tick <em>“visit in this exact order”</em> to fix the sequence.</li>
+          </ul>
+
+          <h3>Getting around (Calendar)</h3>
           <ul class="intro-list">
             <li><strong>‹ ›</strong> move between months; <strong>Today</strong> jumps back to now.</li>
             <li>Use the <strong>Leagues &amp; Teams</strong> panel on the right to switch a whole
@@ -82,12 +138,15 @@
               exact ET time, and the promotion list.</li>
           </ul>
 
-          <h3>🚗 Roadtrip planner</h3>
+          <h3>🚗 Roadtrips</h3>
           <ul class="intro-list">
-            <li>In a game's details, tick <strong>“Add this game to my roadtrip.”</strong></li>
-            <li>The <strong>Roadtrip</strong> button (top bar) then builds an itinerary of your
-              picked games in date order, with a <strong>Google Maps</strong> route between each
-              arena. Your picks are saved in this browser.</li>
+            <li><strong>Build your own:</strong> in a game's details tick
+              <strong>“Add this game to my roadtrip”</strong>; the <strong>Roadtrip</strong> button
+              in the top bar then shows your picked games in date order with a
+              <strong>Google&nbsp;Maps</strong> route between arenas.</li>
+            <li><strong>Let it plan for you:</strong> the <strong>RoadTrip Planning</strong> tab
+              takes 2+ teams and a day count and lists every itinerary that catches each one at
+              a home game — add any result to your roadtrip with one click.</li>
           </ul>
 
           <p class="intro-foot">

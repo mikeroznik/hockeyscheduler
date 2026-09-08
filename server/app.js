@@ -6,7 +6,9 @@ import { getNCAAGames } from './lib/ncaa.js';
 import { getMLBGames, getMLBTeamMap } from './lib/mlb.js';
 import { allTeams, rememberTeam, persistTeams } from './lib/teams.js';
 import { fetchJSON } from './lib/http.js';
-import { cached } from './lib/cache.js';
+import { cached, etTodayISO } from './lib/cache.js';
+import { addDaysISO } from './lib/time.js';
+import { planRoadtrips } from './lib/roadtrip.js';
 
 const LEAGUE_LOADERS = {
   NHL: (s, e) => getNHLGames(s, e),
@@ -95,6 +97,59 @@ export function createApp() {
   app.get('/api/teams', (_req, res) => {
     warmup();
     res.json({ teams: allTeams() });
+  });
+
+  // RoadTrip planner: find every minimal way to catch all of `teams` within a
+  // window of `days` consecutive days, searching forward from `start` (default
+  // today) over a fixed horizon.
+  const PLANNER_HORIZON_DAYS = 90;
+  app.get('/api/roadtrip', async (req, res) => {
+    warmup();
+    const teamIds = String(req.query.teams || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const days = parseInt(req.query.days, 10);
+    const start = ISO_RE.test(req.query.start || '') ? req.query.start : etTodayISO();
+    const strict = req.query.strict === '1' || req.query.strict === 'true';
+
+    if (teamIds.length < 2) return res.status(400).json({ error: 'Select at least 2 teams.' });
+    if (new Set(teamIds).size !== teamIds.length)
+      return res.status(400).json({ error: 'Duplicate teams in request.' });
+    if (teamIds.length > 20) return res.status(400).json({ error: 'At most 20 teams.' });
+    if (!(days >= 2 && days <= 20))
+      return res.status(400).json({ error: 'Trip length must be 2–20 days.' });
+    if (teamIds.length > days)
+      return res
+        .status(400)
+        .json({ error: `${teamIds.length} teams need at least a ${teamIds.length}-day trip.` });
+
+    const end = addDaysISO(start, PLANNER_HORIZON_DAYS);
+    const leagues = [...new Set(teamIds.map((id) => id.split(':')[0]))].filter((l) =>
+      ALL_LEAGUES.includes(l)
+    );
+
+    const settled = await Promise.allSettled(leagues.map((l) => LEAGUE_LOADERS[l](start, end)));
+    const games = [];
+    const errors = {};
+    settled.forEach((r, i) => {
+      if (r.status === 'fulfilled') games.push(...r.value);
+      else errors[leagues[i]] = r.reason?.message || 'failed';
+    });
+
+    const selected = new Set(teamIds);
+    const relevant = games.filter((g) => selected.has(g.home.id)); // home games only
+    const { itineraries, truncated } = planRoadtrips(relevant, teamIds, days, { cap: 200, strict });
+
+    const known = allTeams();
+    res.json({
+      searched: { start, end, days, strict, horizonDays: PLANNER_HORIZON_DAYS },
+      teams: teamIds.map((id) => known.find((t) => t.id === id) || { id, name: id, league: id.split(':')[0] }),
+      count: itineraries.length,
+      truncated,
+      itineraries,
+      errors,
+    });
   });
 
   app.get('/api/health', (_req, res) => res.json({ ok: true }));
